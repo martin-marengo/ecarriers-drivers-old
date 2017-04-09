@@ -1,4 +1,15 @@
 <resources>
+    <dimen name="gv_margin_top_bottom">12dp</dimen>
+
+    <dimen name="tv_title_mid">18sp</dimen>
+    <dimen name="tv_title_big">22sp</dimen>
+    <dimen name="tv_title_splash">26sp</dimen>
+    <dimen name="tv_title_small">16sp</dimen>
+
+    <dimen name="splash_logo_img">144dp</dimen>
+
+    <dimen name="app_icon_size">52dp</dimen>
+
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>

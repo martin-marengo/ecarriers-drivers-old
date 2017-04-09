@@ -3,12 +3,10 @@ package com.ecarriers.drivers.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
+import java.util.ArrayList;
 
-public class Trip extends RealmObject {
+public class Trip {
 
-    @PrimaryKey
     @SerializedName("id")
     @Expose
     private long id;
@@ -25,26 +23,64 @@ public class Trip extends RealmObject {
     @Expose
     private String state;
 
-    public Trip(long id, String origin, String destination, String state){
-        this.id = id;
-        this.origin = origin;
-        this.destination = destination;
-        this.state = state;
+    @SerializedName("shipment_publications")
+    @Expose
+    private ArrayList<ShipmentPublication> shipmentPublications;
+
+    public enum TripStates {
+
+        STATUS_HAVE_TO_FETCH_ITEMS("have_to_pick_up_items"),
+        STATUS_DRIVING("driving");
+
+        private final String state;
+
+        TripStates(final String state) {
+            this.state = state;
+        }
+
+        @Override
+        public String toString() {
+            return state;
+        }
     }
 
     public long getId() {
         return id;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public String getOrigin() {
         return origin;
+    }
+
+    public void setOrigin(String origin) {
+        this.origin = origin;
     }
 
     public String getDestination() {
         return destination;
     }
 
+    public void setDestination(String destination) {
+        this.destination = destination;
+    }
+
     public String getState() {
         return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public ArrayList<ShipmentPublication> getShipmentPublications() {
+        return shipmentPublications;
+    }
+
+    public void setShipmentPublications(ArrayList<ShipmentPublication> shipmentPublications) {
+        this.shipmentPublications = shipmentPublications;
     }
 }

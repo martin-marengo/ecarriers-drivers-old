@@ -1,21 +1,17 @@
-package com.ecarriers.drivers.models;
-
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+package com.ecarriers.drivers.data.db.entities;
 
 import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
 
-public class Item extends RealmObject {
+public class ItemDB extends RealmObject {
 
-    @SerializedName("description")
-    @Expose
     private String description;
-
-    @SerializedName("quantity")
-    @Expose
     private int quantity;
 
+    @Ignore
     private long shipmentPublicationId;
+
+    public ItemDB(){}
 
     public String getDescription() {
         return description;
@@ -36,7 +32,6 @@ public class Item extends RealmObject {
     public long getShipmentPublicationId() {
         return shipmentPublicationId;
     }
-
     public void setShipmentPublicationId(long shipmentPublicationId) {
         this.shipmentPublicationId = shipmentPublicationId;
     }

@@ -3,7 +3,7 @@ package com.ecarriers.drivers.remote;
 import android.content.Context;
 import android.util.Log;
 
-import com.ecarriers.drivers.data.ApplicationData;
+import com.ecarriers.drivers.data.preferences.Preferences;
 import com.ecarriers.drivers.interfaces.IAsyncResponse;
 import com.ecarriers.drivers.interfaces.ISyncTrips;
 import com.ecarriers.drivers.remote.pojos.TripsResponse;
@@ -35,13 +35,13 @@ public class SyncUtils {
     }
 
     private void downloadActiveTrips(final ISyncTrips listener){
-        Call<TripsResponse> call = mEcarriersAPI.getActiveTrips(ApplicationData.getSessionToken(mContext));
+        Call<TripsResponse> call = mEcarriersAPI.getActiveTrips(Preferences.getSessionToken(mContext));
         call.enqueue(new Callback<TripsResponse>() {
             @Override
             public void onResponse(Call<TripsResponse> call, Response<TripsResponse> response) {
                 if(response.isSuccessful()) {
                     if (response.body() != null) {
-                        listener.onResponseButacas(SUCCESS, new TripsResponse());
+                        listener.onResponse(SUCCESS, new TripsResponse());
                     }
                 }else{
                     try {
@@ -49,7 +49,7 @@ public class SyncUtils {
                     }catch(Exception e){
                         e.printStackTrace();
                     }
-                    listener.onResponseButacas(FAILURE, new TripsResponse());
+                    listener.onResponse(FAILURE, new TripsResponse());
                 }
             }
 
@@ -63,7 +63,7 @@ public class SyncUtils {
                     e.printStackTrace();
                 }
 
-                listener.onResponseButacas(FAILURE, new TripsResponse());
+                listener.onResponse(FAILURE, new TripsResponse());
             }
         });
     }

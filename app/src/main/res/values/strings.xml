@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">eCarriers Viajante</string>
 
+    <!-- Strings generales -->
+    <string name="msg_no_connection">No hay conexión a Internet.</string>
+
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Contraseña</string>
@@ -11,4 +14,8 @@
     <string name="error_incorrect_password">La contraseña es incorrecta</string>
     <string name="error_field_required">Este campo es requerido</string>
     <string name="permission_rationale">"Los permisos de contactos son necesarios para autocompletar el email."</string>
+
+    <!-- Strings related to the trip list -->
+    <string name="text_no_trips">No hay viajes por el momento.</string>
+    <string name="msg_get_trips_error">No se pudieron actualizar los viajes. Verifique su conexión.</string>
 </resources>

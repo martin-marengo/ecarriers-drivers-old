@@ -12,6 +12,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 
@@ -25,9 +26,12 @@ public interface EcarriersAPI {
                               @Field("password") String password);
 
     // All trips either pendings or traveling.
-    @FormUrlEncoded
-    @POST("trips/actives")
-    Call<TripsResponse> getActiveTrips(@Header("token") String token);
+//    @FormUrlEncoded
+//    @POST("trips/actives")
+//    Call<TripsResponse> getActiveTrips(@Header("token") String token);
+
+    @GET("apidummy/test")
+    Call<TripsResponse> getActiveTrips(@Header("Accept") String token);
 
     class Factory {
         private static EcarriersAPI ecarriersAPI;

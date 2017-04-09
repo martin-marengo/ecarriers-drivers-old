@@ -1,4 +1,4 @@
-package com.ecarriers.drivers.fragments;
+package com.ecarriers.drivers.view.fragments;
 
 import android.support.v4.app.Fragment;
 

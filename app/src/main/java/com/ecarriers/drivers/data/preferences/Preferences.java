@@ -1,9 +1,9 @@
-package com.ecarriers.drivers.data;
+package com.ecarriers.drivers.data.preferences;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
-public class ApplicationData {
+public class Preferences {
 
     // Preferences keys
 

@@ -18,8 +18,8 @@ import com.ecarriers.drivers.data.db.DbDataSource;
 import com.ecarriers.drivers.interfaces.ISyncTrips;
 import com.ecarriers.drivers.interfaces.ITripClick;
 import com.ecarriers.drivers.models.Trip;
-import com.ecarriers.drivers.data.remote.SyncUtils;
-import com.ecarriers.drivers.data.remote.pojos.TripsResponse;
+import com.ecarriers.drivers.remote.SyncUtils;
+import com.ecarriers.drivers.remote.pojos.TripsResponse;
 import com.ecarriers.drivers.utils.Connectivity;
 import com.ecarriers.drivers.view.adapters.TripsAdapter;
 

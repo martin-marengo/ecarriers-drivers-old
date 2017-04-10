@@ -18,4 +18,7 @@
     <!-- Strings related to the trip list -->
     <string name="text_no_trips">No hay viajes por el momento.</string>
     <string name="msg_get_trips_error">No se pudieron actualizar los viajes. Verifique su conexión.</string>
+
+    <string name="text_origin">Origen:</string>
+    <string name="text_destination">Destino:</string>
 </resources>

@@ -1,7 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/text_origin"
+            android:textSize="@dimen/tv_title_small"
+            android:textStyle="bold"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"/>
+
+        <TextView
+            android:id="@+id/tv_origin"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="San Francisco, Córdoba, Argentina."
+            android:textSize="@dimen/tv_title_small"
+            android:padding="10dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/text_destination"
+            android:textSize="@dimen/tv_title_small"
+            android:textStyle="bold"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"/>
+
+        <TextView
+            android:id="@+id/tv_destination"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="Córdoba, Córdoba, Argentina."
+            android:textSize="@dimen/tv_title_small"
+            android:padding="10dp"/>
+    </LinearLayout>
+
 
 </LinearLayout>

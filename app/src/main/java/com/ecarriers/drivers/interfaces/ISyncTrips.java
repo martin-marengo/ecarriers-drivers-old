@@ -1,6 +1,6 @@
 package com.ecarriers.drivers.interfaces;
 
-import com.ecarriers.drivers.data.remote.pojos.TripsResponse;
+import com.ecarriers.drivers.remote.pojos.TripsResponse;
 
 public interface ISyncTrips {
 

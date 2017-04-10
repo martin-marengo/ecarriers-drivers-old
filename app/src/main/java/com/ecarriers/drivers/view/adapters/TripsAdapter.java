@@ -1,10 +1,12 @@
 package com.ecarriers.drivers.view.adapters;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.ecarriers.drivers.R;
@@ -12,6 +14,9 @@ import com.ecarriers.drivers.interfaces.ITripClick;
 import com.ecarriers.drivers.models.Trip;
 
 import java.util.ArrayList;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.TripView> {
 
@@ -37,21 +42,21 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.TripView> {
 
     class TripView extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        TextView tvOrigin;
-        TextView tvDestination;
-        TextView tvState;
+        @BindView(R.id.tv_origin) TextView tvOrigin;
+        @BindView(R.id.tv_destination) TextView tvDestination;
+        @BindView(R.id.btn_start_trip) ImageButton btnStartTrip;
 
         public TripView(View itemView) {
             super(itemView);
 
-            //tvOrigin = (TextView) itemView.findViewById(R.id.tv_descripcion_tarifa);
+            ButterKnife.bind(this, itemView);
 
             itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-
+            mTripClickListener.onTripClick(getAdapterPosition(), mTrips.get(getAdapterPosition()));
         }
     }
 
@@ -70,13 +75,28 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.TripView> {
 
     // Involves populating data into the item through holder
     @Override
-    public void onBindViewHolder(TripView viewHolder, int position) {
+    public void onBindViewHolder(final TripView viewHolder, final int position) {
 
-        //SeleccionTarifa seleccionTarifa = mTrips.get(position);
+        final Trip trip = mTrips.get(position);
 
-//        if(seleccionTarifa != null) {
-//
-//        }
+        if (trip != null){
+            if(trip.getState().equals(Trip.TripStates.STATUS_DRIVING.toString())) {
+                viewHolder.btnStartTrip.setColorFilter(ContextCompat.getColor(mContext, R.color.driving_trip));
+            }else{
+                viewHolder.btnStartTrip.setColorFilter(ContextCompat.getColor(mContext, R.color.pending_trip));
+            }
+
+            viewHolder.tvOrigin.setText(trip.getOrigin());
+            viewHolder.tvDestination.setText(trip.getDestination());
+
+            viewHolder.btnStartTrip.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mTripClickListener.onStartTripClick(position, trip);
+                    viewHolder.btnStartTrip.setColorFilter(ContextCompat.getColor(mContext, R.color.driving_trip));
+                }
+            });
+        }
     }
 
     @Override

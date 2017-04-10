@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">eCarriers Viajante</string>
+    <string name="powered_by">Powered by eCarriers &#169;</string>
 
     <!-- Strings generales -->
     <string name="msg_no_connection">No hay conexión a Internet.</string>
@@ -21,4 +22,7 @@
 
     <string name="text_origin">Origen:</string>
     <string name="text_destination">Destino:</string>
+
+    <string name="text_trip_pending">Pendiente</string>
+    <string name="text_trip_driving">Viajando</string>
 </resources>

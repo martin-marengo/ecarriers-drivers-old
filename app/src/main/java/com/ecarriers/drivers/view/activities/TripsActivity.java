@@ -6,7 +6,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -75,8 +74,6 @@ public class TripsActivity extends AppCompatActivity implements ISyncTrips, ITri
         }
         ActionBar tb = getSupportActionBar();
         if(tb != null) {
-            tb.setDisplayHomeAsUpEnabled(true);
-            //tb.setDisplayShowHomeEnabled(true);
             tb.setDisplayShowTitleEnabled(true);
         }
     }
@@ -122,9 +119,6 @@ public class TripsActivity extends AppCompatActivity implements ISyncTrips, ITri
         adapter = new TripsAdapter(getApplicationContext(), trips, this);
         rvTrips.setAdapter(adapter);
 
-        DividerItemDecoration itemDecoration = new DividerItemDecoration(this, LinearLayoutManager.VERTICAL);
-        rvTrips.addItemDecoration(itemDecoration);
-
         rvTrips.setLayoutManager(new LinearLayoutManager(this));
 
         if(trips.isEmpty()){
@@ -132,6 +126,7 @@ public class TripsActivity extends AppCompatActivity implements ISyncTrips, ITri
         }
 
         swipeRefreshLayout.setRefreshing(false);
+        swipeRefreshLayout.setEnabled(true);
 
         if(showMessage && message != null && !message.isEmpty()){
             showMessage(message);
@@ -151,6 +146,11 @@ public class TripsActivity extends AppCompatActivity implements ISyncTrips, ITri
     @Override
     public void onTripClick(int position, Trip trip) {
         Snackbar.make(swipeRefreshLayout, "Click: " + String.valueOf(position), Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onStartTripClick(int position, Trip trip) {
+        Snackbar.make(swipeRefreshLayout, "Comenzando viaje " + String.valueOf(position), Snackbar.LENGTH_LONG).show();
     }
 
     private void showMessage(String message){

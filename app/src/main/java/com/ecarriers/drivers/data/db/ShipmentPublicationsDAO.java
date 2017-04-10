@@ -51,6 +51,7 @@ public class ShipmentPublicationsDAO extends RealmDAO {
         shipmentPublication.setOriginAddress(dbShipmentPublication.getOriginAddress());
         shipmentPublication.setDestinationAddress(dbShipmentPublication.getDestinationAddress());
         shipmentPublication.setState(dbShipmentPublication.getState());
+        shipmentPublication.setTripId(tripId);
 
         if(dbShipmentPublication.getItems() != null){
             ArrayList<Item> items = new ArrayList<>();

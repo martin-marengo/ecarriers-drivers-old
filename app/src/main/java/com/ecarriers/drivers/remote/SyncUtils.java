@@ -3,7 +3,6 @@ package com.ecarriers.drivers.remote;
 import android.content.Context;
 import android.util.Log;
 
-import com.ecarriers.drivers.data.preferences.Preferences;
 import com.ecarriers.drivers.interfaces.IAsyncResponse;
 import com.ecarriers.drivers.interfaces.ISyncTrips;
 import com.ecarriers.drivers.remote.pojos.TripsResponse;
@@ -35,13 +34,14 @@ public class SyncUtils {
     }
 
     private void downloadActiveTrips(final ISyncTrips listener){
-        Call<TripsResponse> call = mEcarriersAPI.getActiveTrips(Preferences.getSessionToken(mContext));
+        //Call<TripsResponse> call = mEcarriersAPI.getActiveTrips(Preferences.getSessionToken(mContext));
+        Call<TripsResponse> call = mEcarriersAPI.getActiveTrips("application/json");
         call.enqueue(new Callback<TripsResponse>() {
             @Override
             public void onResponse(Call<TripsResponse> call, Response<TripsResponse> response) {
                 if(response.isSuccessful()) {
                     if (response.body() != null) {
-                        listener.onResponse(SUCCESS, new TripsResponse());
+                        listener.onResponse(SUCCESS, response.body());
                     }
                 }else{
                     try {

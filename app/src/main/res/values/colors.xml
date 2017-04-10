@@ -18,4 +18,11 @@
     <color name="black">#000000</color>
     <color name="icons_generic">#757575</color>
     <color name="text_alert">#BB2413</color>
+
+    <color name="pending_trip">#727272</color>
+    <color name="driving_trip">#304FFE</color>
+
+    <color name="origin">#1D943B</color>
+    <color name="destination">#BB2413</color>
+
 </resources>

@@ -29,8 +29,7 @@ class TripsDAO extends RealmDAO {
         Realm realm = Realm.getDefaultInstance();
 
         try {
-            // Execute transaction async, then return success or error.
-            realm.executeTransactionAsync(new Realm.Transaction() {
+            realm.executeTransaction(new Realm.Transaction() {
                 @Override
                 public void execute(Realm realm) {
                     ArrayList<TripDB> dbTrips = new ArrayList<>();

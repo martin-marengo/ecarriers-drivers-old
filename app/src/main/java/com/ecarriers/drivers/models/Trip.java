@@ -30,7 +30,8 @@ public class Trip {
     public enum TripStates {
 
         STATUS_HAVE_TO_FETCH_ITEMS("have_to_pick_up_items"),
-        STATUS_DRIVING("driving");
+        STATUS_DRIVING("driving"),
+        STATUS_FINISHED("finished");
 
         private final String state;
 

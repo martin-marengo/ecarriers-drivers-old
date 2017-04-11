@@ -20,9 +20,6 @@
     <string name="text_no_trips">No hay viajes por el momento.</string>
     <string name="msg_get_trips_error">No se pudieron actualizar los viajes. Verifique su conexión.</string>
 
-    <string name="text_origin">Origen:</string>
-    <string name="text_destination">Destino:</string>
-
     <string name="text_trip_pending">Pendiente</string>
     <string name="text_trip_driving">Viajando</string>
 </resources>

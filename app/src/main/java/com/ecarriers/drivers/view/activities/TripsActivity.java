@@ -1,5 +1,6 @@
 package com.ecarriers.drivers.view.activities;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -38,6 +39,8 @@ public class TripsActivity extends AppCompatActivity implements ISyncTrips, ITri
 
     private TripsAdapter adapter = null;
     private DbDataSource dbDataSource = null;
+
+    private AsyncTask currentTask = null;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -113,9 +116,31 @@ public class TripsActivity extends AppCompatActivity implements ISyncTrips, ITri
         setupUI(showMessage, message);
     }
 
+    private class SortTripsAT extends AsyncTask<Void, Void, Void> {
+
+        private ArrayList<Trip> _trips;
+
+        public SortTripsAT(ArrayList<Trip> trips){
+            this._trips = trips;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            Trip.sort(this._trips);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            trips = _trips;
+        }
+    }
+
     private void setupUI(boolean showMessage, String message){
         rvTrips.setHasFixedSize(true);
 
+        Trip.sort(trips);
         adapter = new TripsAdapter(getApplicationContext(), trips, this);
         rvTrips.setAdapter(adapter);
 
@@ -155,5 +180,11 @@ public class TripsActivity extends AppCompatActivity implements ISyncTrips, ITri
 
     private void showMessage(String message){
         Snackbar.make(swipeRefreshLayout, message, Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(currentTask != null && currentTask.getStatus().)
     }
 }

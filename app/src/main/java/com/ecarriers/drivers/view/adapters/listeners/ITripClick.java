@@ -1,4 +1,4 @@
-package com.ecarriers.drivers.interfaces;
+package com.ecarriers.drivers.view.adapters.listeners;
 
 import com.ecarriers.drivers.models.Trip;
 

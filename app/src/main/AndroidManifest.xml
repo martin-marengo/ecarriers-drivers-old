@@ -19,7 +19,8 @@
 
         <activity
             android:name=".view.activities.SplashActivity"
-            android:noHistory="true">
+            android:noHistory="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -31,12 +32,20 @@
             android:name=".view.activities.LoginActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme"
-            android:noHistory="true">
+            android:noHistory="true"
+            android:screenOrientation="portrait">
         </activity>
 
         <activity
             android:name=".view.activities.TripsActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:name=".view.activities.TripActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
         </activity>
 
     </application>

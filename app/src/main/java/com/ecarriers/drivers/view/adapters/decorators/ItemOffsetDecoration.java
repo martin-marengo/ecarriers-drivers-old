@@ -1,4 +1,4 @@
-package com.ecarriers.drivers.view.decorators;
+package com.ecarriers.drivers.view.adapters.decorators;
 
 import android.content.Context;
 import android.graphics.Rect;

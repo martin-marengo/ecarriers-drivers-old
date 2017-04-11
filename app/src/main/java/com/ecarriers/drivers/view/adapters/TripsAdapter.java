@@ -7,11 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ecarriers.drivers.R;
-import com.ecarriers.drivers.interfaces.ITripClick;
 import com.ecarriers.drivers.models.Trip;
+import com.ecarriers.drivers.utils.DateUtils;
+import com.ecarriers.drivers.view.adapters.listeners.ITripClick;
 
 import java.util.ArrayList;
 
@@ -45,6 +47,8 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.TripView> {
         @BindView(R.id.tv_origin) TextView tvOrigin;
         @BindView(R.id.tv_destination) TextView tvDestination;
         @BindView(R.id.btn_start_trip) ImageButton btnStartTrip;
+        @BindView(R.id.tv_departure_date) TextView tvDepartureDate;
+        @BindView(R.id.layout_date) LinearLayout layoutDepartureDate;
 
         public TripView(View itemView) {
             super(itemView);
@@ -60,7 +64,6 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.TripView> {
         }
     }
 
-    // Usually involves inflating a layout from XML and returning the holder
     @Override
     public TripView onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
@@ -73,7 +76,6 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.TripView> {
         return viewHolder;
     }
 
-    // Involves populating data into the item through holder
     @Override
     public void onBindViewHolder(final TripView viewHolder, final int position) {
 
@@ -89,13 +91,28 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.TripView> {
             viewHolder.tvOrigin.setText(trip.getOrigin());
             viewHolder.tvDestination.setText(trip.getDestination());
 
-            viewHolder.btnStartTrip.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mTripClickListener.onStartTripClick(position, trip);
-                    viewHolder.btnStartTrip.setColorFilter(ContextCompat.getColor(mContext, R.color.driving_trip));
-                }
-            });
+            if(trip.canStartTrip()) {
+                viewHolder.btnStartTrip.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mTripClickListener.onStartTripClick(position, trip);
+                    }
+                });
+            } else {
+                viewHolder.btnStartTrip.setEnabled(false);
+                viewHolder.btnStartTrip.setColorFilter(ContextCompat.getColor(mContext, R.color.driving_trip));
+            }
+
+            if(position == 0) {
+                trip.setDepartureDate("2017-04-13 15:00");
+            }
+            String visualDepDate = DateUtils.apiToVisual(trip.getDepartureDate());
+            if(visualDepDate != null && !visualDepDate.equals("")){
+                viewHolder.layoutDepartureDate.setVisibility(View.VISIBLE);
+                viewHolder.tvDepartureDate.setText(visualDepDate + " hs.");
+            }else{
+                viewHolder.layoutDepartureDate.setVisibility(View.GONE);
+            }
         }
     }
 

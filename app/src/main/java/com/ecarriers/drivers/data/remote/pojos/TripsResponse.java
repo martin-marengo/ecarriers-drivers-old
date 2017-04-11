@@ -1,4 +1,4 @@
-package com.ecarriers.drivers.remote.pojos;
+package com.ecarriers.drivers.data.remote.pojos;
 
 import com.ecarriers.drivers.models.Trip;
 import com.google.gson.annotations.Expose;

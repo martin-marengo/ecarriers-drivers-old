@@ -1,9 +1,9 @@
-package com.ecarriers.drivers.remote;
+package com.ecarriers.drivers.data.remote;
 
 import android.content.Context;
 
-import com.ecarriers.drivers.remote.pojos.LoginResponse;
-import com.ecarriers.drivers.remote.pojos.TripsResponse;
+import com.ecarriers.drivers.data.remote.pojos.LoginResponse;
+import com.ecarriers.drivers.data.remote.pojos.TripsResponse;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;

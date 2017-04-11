@@ -5,6 +5,7 @@
     <dimen name="tv_title_big">22sp</dimen>
     <dimen name="tv_title_splash">26sp</dimen>
     <dimen name="tv_title_small">16sp</dimen>
+    <dimen name="tv_body">14sp</dimen>
 
     <dimen name="splash_logo_img">144dp</dimen>
 

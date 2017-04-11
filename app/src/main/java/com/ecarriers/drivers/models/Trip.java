@@ -25,6 +25,10 @@ public class Trip {
     @Expose
     private String state;
 
+    @SerializedName("departure_date")
+    @Expose
+    private String departureDate;
+
     @SerializedName("shipment_publications")
     @Expose
     private ArrayList<ShipmentPublication> shipmentPublications;
@@ -48,30 +52,15 @@ public class Trip {
     }
 
     public static void sort(ArrayList<Trip> list){
-        final Integer driving = 3;
+        final Integer driving = 1;
         final Integer pending = 2;
-        final Integer finished = 1;
+        final Integer finished = 3;
+
         Collections.sort(list, new Comparator<Trip>() {
             @Override
             public int compare(Trip t1, Trip t2) {
-//                int value;
-//                if(t1.getState().equals(TripStates.STATUS_DRIVING.toString())
-//                        && !t2.getState().equals(TripStates.STATUS_DRIVING.toString())) {
-//                    // t1 goes fist.
-//                    value = 1;
-//                } else {
-//                    // t2 is driving and t1 not.
-//                    if(t2.getState().equals(TripStates.STATUS_DRIVING.toString())
-//                            && !t1.getState().equals(TripStates.STATUS_DRIVING.toString())) {
-//                        // t2 goes first
-//                        value = -1;
-//                    } else {
-//                        // The order between t1 and t2 is unimportant.
-//                        value = 0;
-//                    }
-//                }
-//                return value;
                 Integer t1v, t2v;
+
                 if (t1.getState().equals(TripStates.STATUS_DRIVING.toString())){
                     t1v = driving;
                 } else {
@@ -81,6 +70,7 @@ public class Trip {
                         t1v = finished;
                     }
                 }
+
                 if (t2.getState().equals(TripStates.STATUS_DRIVING.toString())){
                     t2v = driving;
                 } else {
@@ -90,9 +80,18 @@ public class Trip {
                         t2v = finished;
                     }
                 }
+
                 return t1v.compareTo(t2v);
             }
         });
+    }
+
+    public boolean canStartTrip(){
+        if(this.getState().equals(TripStates.STATUS_HAVE_TO_FETCH_ITEMS.toString())){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     public long getId() {
@@ -125,6 +124,14 @@ public class Trip {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public String getDepartureDate() {
+        return departureDate;
+    }
+
+    public void setDepartureDate(String departureDate) {
+        this.departureDate = departureDate;
     }
 
     public ArrayList<ShipmentPublication> getShipmentPublications() {

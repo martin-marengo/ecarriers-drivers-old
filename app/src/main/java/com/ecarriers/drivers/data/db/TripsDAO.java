@@ -81,6 +81,7 @@ class TripsDAO extends RealmDAO {
         dbTrip.setId(trip.getId());
         dbTrip.setOrigin(trip.getOrigin());
         dbTrip.setDestination(trip.getDestination());
+        dbTrip.setDepartureDate(trip.getDepartureDate());
         dbTrip.setState(trip.getState());
 
         if(trip.getShipmentPublications() != null){
@@ -101,6 +102,7 @@ class TripsDAO extends RealmDAO {
         trip.setId(dbTrip.getId());
         trip.setOrigin(dbTrip.getOrigin());
         trip.setDestination(dbTrip.getDestination());
+        trip.setDepartureDate(dbTrip.getDepartureDate());
         trip.setState(dbTrip.getState());
 
         if(dbTrip.getShipmentPublications() != null){

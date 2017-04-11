@@ -15,11 +15,11 @@ import android.widget.TextView;
 
 import com.ecarriers.drivers.R;
 import com.ecarriers.drivers.data.db.DbDataSource;
-import com.ecarriers.drivers.interfaces.ISyncTrips;
-import com.ecarriers.drivers.interfaces.ITripClick;
+import com.ecarriers.drivers.data.remote.listeners.ISyncTrips;
+import com.ecarriers.drivers.view.adapters.listeners.ITripClick;
 import com.ecarriers.drivers.models.Trip;
-import com.ecarriers.drivers.remote.SyncUtils;
-import com.ecarriers.drivers.remote.pojos.TripsResponse;
+import com.ecarriers.drivers.data.remote.SyncUtils;
+import com.ecarriers.drivers.data.remote.pojos.TripsResponse;
 import com.ecarriers.drivers.utils.Connectivity;
 import com.ecarriers.drivers.view.adapters.TripsAdapter;
 
@@ -41,6 +41,10 @@ public class TripsActivity extends AppCompatActivity implements ISyncTrips, ITri
     private DbDataSource dbDataSource = null;
 
     private AsyncTask currentTask = null;
+
+    // To be shown in setupUI
+    private boolean showMessage = false;
+    private String message = null;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -90,17 +94,14 @@ public class TripsActivity extends AppCompatActivity implements ISyncTrips, ITri
             if (trips == null){
                 trips = new ArrayList<>();
             }
-            boolean showMessage = true;
-            String message = getResources().getString(R.string.msg_no_connection);
-            setupUI(showMessage, message);
+            showMessage = true;
+            message = getResources().getString(R.string.msg_no_connection);
+            currentTask = new SortTripsAT(trips).execute();
         }
     }
 
     @Override
     public void onResponse(boolean success, TripsResponse response) {
-        boolean showMessage = false;
-        String message = "";
-
         if (success && response != null && response.getTrips() != null){
             if (dbDataSource.saveActiveTrips(response.getTrips())){
                 trips = dbDataSource.getActiveTrips();
@@ -113,7 +114,7 @@ public class TripsActivity extends AppCompatActivity implements ISyncTrips, ITri
             trips = new ArrayList<>();
         }
 
-        setupUI(showMessage, message);
+        currentTask = new SortTripsAT(trips).execute();
     }
 
     private class SortTripsAT extends AsyncTask<Void, Void, Void> {
@@ -134,13 +135,13 @@ public class TripsActivity extends AppCompatActivity implements ISyncTrips, ITri
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             trips = _trips;
+            setupUI();
         }
     }
 
-    private void setupUI(boolean showMessage, String message){
+    private void setupUI(){
         rvTrips.setHasFixedSize(true);
 
-        Trip.sort(trips);
         adapter = new TripsAdapter(getApplicationContext(), trips, this);
         rvTrips.setAdapter(adapter);
 
@@ -156,6 +157,8 @@ public class TripsActivity extends AppCompatActivity implements ISyncTrips, ITri
         if(showMessage && message != null && !message.isEmpty()){
             showMessage(message);
         }
+        showMessage = false;
+        message = null;
     }
 
     private void showEmptyTrips(boolean show){
@@ -176,6 +179,8 @@ public class TripsActivity extends AppCompatActivity implements ISyncTrips, ITri
     @Override
     public void onStartTripClick(int position, Trip trip) {
         Snackbar.make(swipeRefreshLayout, "Comenzando viaje " + String.valueOf(position), Snackbar.LENGTH_LONG).show();
+        trip.setState(Trip.TripStates.STATUS_DRIVING.toString());
+        adapter.notifyDataSetChanged();
     }
 
     private void showMessage(String message){
@@ -185,6 +190,8 @@ public class TripsActivity extends AppCompatActivity implements ISyncTrips, ITri
     @Override
     protected void onStop() {
         super.onStop();
-        if(currentTask != null && currentTask.getStatus().)
+        if(currentTask != null && currentTask.getStatus() == AsyncTask.Status.RUNNING){
+            currentTask.cancel(true);
+        }
     }
 }

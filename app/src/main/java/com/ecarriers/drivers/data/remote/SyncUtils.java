@@ -1,11 +1,11 @@
-package com.ecarriers.drivers.remote;
+package com.ecarriers.drivers.data.remote;
 
 import android.content.Context;
 import android.util.Log;
 
-import com.ecarriers.drivers.interfaces.IAsyncResponse;
-import com.ecarriers.drivers.interfaces.ISyncTrips;
-import com.ecarriers.drivers.remote.pojos.TripsResponse;
+import com.ecarriers.drivers.data.remote.listeners.IAsyncResponse;
+import com.ecarriers.drivers.data.remote.listeners.ISyncTrips;
+import com.ecarriers.drivers.data.remote.pojos.TripsResponse;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,6 +34,7 @@ public class SyncUtils {
     }
 
     private void downloadActiveTrips(final ISyncTrips listener){
+        // TODO: corregir
         //Call<TripsResponse> call = mEcarriersAPI.getActiveTrips(Preferences.getSessionToken(mContext));
         Call<TripsResponse> call = mEcarriersAPI.getActiveTrips("application/json");
         call.enqueue(new Callback<TripsResponse>() {

@@ -22,4 +22,9 @@
 
     <string name="text_trip_pending">Pendiente</string>
     <string name="text_trip_driving">Viajando</string>
+    <string name="text_trip_finished">Finalizado</string>
+
+    <string name="text_report_location">REPORTAR UBICACIÓN</string>
+    <string name="text_start_trip">COMENZAR VIAJE</string>
+    <string name="text_finish_trip">FINALIZAR VIAJE</string>
 </resources>

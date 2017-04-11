@@ -11,6 +11,7 @@ public class TripDB extends RealmObject {
     private String origin;
     private String destination;
     private String state;
+    private String departureDate;
     private RealmList<ShipmentPublicationDB> shipmentPublications;
 
     public TripDB(){}
@@ -41,6 +42,14 @@ public class TripDB extends RealmObject {
     }
     public void setState(String state) {
         this.state = state;
+    }
+
+    public String getDepartureDate() {
+        return departureDate;
+    }
+
+    public void setDepartureDate(String departureDate) {
+        this.departureDate = departureDate;
     }
 
     public RealmList<ShipmentPublicationDB> getShipmentPublications() {

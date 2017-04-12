@@ -6,6 +6,13 @@ import io.realm.annotations.PrimaryKey;
 
 public class TripDB extends RealmObject {
 
+    public final static String ID = "id";
+    public final static String ORIGIN = "origin";
+    public final static String DESTINATION = "destination";
+    public final static String STATE = "state";
+    public final static String DEPARTURE_DATE = "departureDate";
+    public final static String SHIPMENT_PUBLICATIONS = "shipmentPublications";
+
     @PrimaryKey
     private long id;
     private String origin;

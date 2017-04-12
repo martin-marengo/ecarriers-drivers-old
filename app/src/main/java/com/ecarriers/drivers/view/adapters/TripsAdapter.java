@@ -103,13 +103,16 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.TripView> {
                 viewHolder.btnStartTrip.setColorFilter(ContextCompat.getColor(mContext, R.color.driving_trip));
             }
 
+            // TODO: borrar esto
             if(position == 0) {
                 trip.setDepartureDate("2017-04-13 15:00");
             }
+
             String visualDepDate = DateUtils.apiToVisual(trip.getDepartureDate());
             if(visualDepDate != null && !visualDepDate.equals("")){
+                visualDepDate += mContext.getResources().getString(R.string.suffix_hour);
                 viewHolder.layoutDepartureDate.setVisibility(View.VISIBLE);
-                viewHolder.tvDepartureDate.setText(visualDepDate + " hs.");
+                viewHolder.tvDepartureDate.setText(visualDepDate);
             }else{
                 viewHolder.layoutDepartureDate.setVisibility(View.GONE);
             }

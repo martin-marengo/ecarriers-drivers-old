@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 import io.realm.RealmList;
 
-public class ShipmentPublicationsDAO extends RealmDAO {
+class ShipmentPublicationsDAO extends RealmDAO {
 
     ShipmentPublicationsDAO(Context context){
         super(context);

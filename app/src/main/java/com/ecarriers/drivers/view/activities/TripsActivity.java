@@ -1,5 +1,6 @@
 package com.ecarriers.drivers.view.activities;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,13 +16,14 @@ import android.widget.TextView;
 
 import com.ecarriers.drivers.R;
 import com.ecarriers.drivers.data.db.DbDataSource;
-import com.ecarriers.drivers.data.remote.listeners.ISyncTrips;
-import com.ecarriers.drivers.view.adapters.listeners.ITripClick;
-import com.ecarriers.drivers.models.Trip;
 import com.ecarriers.drivers.data.remote.SyncUtils;
+import com.ecarriers.drivers.data.remote.listeners.ISyncTrips;
 import com.ecarriers.drivers.data.remote.pojos.TripsResponse;
+import com.ecarriers.drivers.models.Trip;
 import com.ecarriers.drivers.utils.Connectivity;
+import com.ecarriers.drivers.utils.Constants;
 import com.ecarriers.drivers.view.adapters.TripsAdapter;
+import com.ecarriers.drivers.view.adapters.listeners.ITripClick;
 
 import java.util.ArrayList;
 
@@ -173,7 +175,12 @@ public class TripsActivity extends AppCompatActivity implements ISyncTrips, ITri
 
     @Override
     public void onTripClick(int position, Trip trip) {
-        Snackbar.make(swipeRefreshLayout, "Click: " + String.valueOf(position), Snackbar.LENGTH_LONG).show();
+        //Snackbar.make(swipeRefreshLayout, "Click: " + String.valueOf(position), Snackbar.LENGTH_LONG).show();
+        if (trip != null) {
+            Intent i = new Intent(TripsActivity.this, TripActivity.class);
+            i.putExtra(Constants.KEY_TRIP_ID, trip.getId());
+            startActivity(i);
+        }
     }
 
     @Override

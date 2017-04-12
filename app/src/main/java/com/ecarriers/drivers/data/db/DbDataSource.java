@@ -25,4 +25,10 @@ public class DbDataSource {
 
         return tripsDAO.getActiveTrips();
     }
+
+    public Trip getActiveTrip(long id){
+        TripsDAO tripsDAO = new TripsDAO(context);
+
+        return tripsDAO.getActiveTrip(id);
+    }
 }

@@ -1,9 +1,12 @@
 <resources>
     <string name="app_name">eCarriers Viajante</string>
     <string name="powered_by">Powered by eCarriers &#169;</string>
+    <string name="trip_actvuty_title">Viaje</string>
 
     <!-- Strings generales -->
     <string name="msg_no_connection">No hay conexión a Internet.</string>
+    <string name="suffix_hour">&#160;hs.</string>
+
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>

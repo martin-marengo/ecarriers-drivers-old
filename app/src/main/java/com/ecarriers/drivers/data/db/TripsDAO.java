@@ -73,6 +73,26 @@ class TripsDAO extends RealmDAO {
         return tripList;
     }
 
+    Trip getActiveTrip(long id){
+        Trip trip = new Trip();
+
+        // Initialize Realm
+        Realm.init(context);
+        // Get a Realm instance for this thread
+        Realm realm = Realm.getDefaultInstance();
+
+        try {
+            final TripDB dbTrip = realm.where(TripDB.class).equalTo(TripDB.ID, id).findFirst();
+            if (dbTrip != null) {
+                trip = TripsDAO.mapToModel(dbTrip);
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return trip;
+    }
+
     // MAPPERS
 
     private static TripDB mapToEntity(@NonNull final Trip trip){

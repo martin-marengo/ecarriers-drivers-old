@@ -30,7 +30,11 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:focusableInTouchMode="true"
             android:orientation="vertical">
+            <!-- focusableInTouchMode is set to recyclerview's parent layout
+                 for start at top scroll position, without this property
+                 nestedScrollView start at middle of scroll -->
 
             <android.support.v7.widget.CardView
                 xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -65,21 +69,45 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
-                        <ImageView
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            android:src="@drawable/ic_location_on_black_18dp"
-                            android:padding="5dp"
-                            android:layout_gravity="center"
-                            android:tint="@color/origin"/>
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_weight="10"
+                            android:layout_height="match_parent">
 
-                        <TextView
-                            android:id="@+id/tv_origin"
+                            <ImageView
+                                android:id="@+id/origin_indicator"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/origin_indicator"
+                                android:layout_centerInParent="true"/>
+
+                            <View
+                                android:id="@+id/line"
+                                android:layout_width="2dp"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/origin_indicator"
+                                android:layout_centerHorizontal="true"
+                                android:background="@color/colorAccent"/>
+
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_weight="90"
                             android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            android:textSize="@dimen/tv_title_small"
-                            android:textColor="@color/textColorPrimary"
-                            android:padding="5dp"/>
+                            android:orientation="vertical"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:id="@+id/tv_origin"
+                                android:layout_height="wrap_content"
+                                android:layout_width="wrap_content"
+                                android:textSize="@dimen/tv_title_small"
+                                android:textColor="@color/textColorPrimary"
+                                android:padding="5dp"/>
+
+                        </LinearLayout>
+
                     </LinearLayout>
 
                     <LinearLayout
@@ -87,21 +115,44 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
-                        <ImageView
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            android:src="@drawable/ic_location_on_black_18dp"
-                            android:padding="5dp"
-                            android:layout_gravity="center"
-                            android:tint="@color/destination"/>
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_weight="10"
+                            android:layout_height="match_parent">
 
-                        <TextView
-                            android:id="@+id/tv_destination"
+                            <ImageView
+                                android:id="@+id/destination_indicator"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/destination_indicator"
+                                android:layout_centerInParent="true"/>
+
+                            <View
+                                android:layout_width="2dp"
+                                android:layout_height="wrap_content"
+                                android:layout_above="@id/destination_indicator"
+                                android:layout_centerHorizontal="true"
+                                android:background="@color/colorAccent"/>
+
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_weight="90"
                             android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            android:textSize="@dimen/tv_title_small"
-                            android:textColor="@color/textColorPrimary"
-                            android:padding="5dp"/>
+                            android:orientation="vertical"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:id="@+id/tv_destination"
+                                android:layout_height="wrap_content"
+                                android:layout_width="wrap_content"
+                                android:textSize="@dimen/tv_title_small"
+                                android:textColor="@color/textColorPrimary"
+                                android:padding="5dp"/>
+
+                        </LinearLayout>
+
                     </LinearLayout>
 
                     <LinearLayout
@@ -147,7 +198,8 @@
                             android:layout_height="wrap_content"
                             android:text="@string/text_report_location"
                             android:layout_marginLeft="10dp"
-                            style="@style/Widget.AppCompat.Button.Borderless"/>
+                            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                            android:textColor="@color/colorPrimaryDark"/>
 
                         <Button
                             android:id="@+id/btn_finish_trip"
@@ -164,12 +216,22 @@
 
             </android.support.v7.widget.CardView>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_shipment_list"
+                android:textSize="@dimen/tv_title_small"
+                android:textColor="@color/textColorSecondary"
+                android:textStyle="bold"
+                android:layout_marginTop="6dp"
+                android:layout_marginLeft="12dp"/>
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_shipment_publications"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clipToPadding="false"
-                android:layout_marginTop="@dimen/gv_margin_top_bottom"
+                android:layout_marginTop="0dp"
                 android:layout_marginBottom="@dimen/gv_margin_top_bottom"/>
 
         </LinearLayout>

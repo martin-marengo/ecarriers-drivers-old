@@ -19,11 +19,11 @@ public class ShipmentPublication {
     @Expose
     private String description;
 
-    @SerializedName("originAddress")
+    @SerializedName("origin_address")
     @Expose
     private String originAddress;
 
-    @SerializedName("destinationAddress")
+    @SerializedName("destination_address")
     @Expose
     private String destinationAddress;
 

@@ -47,6 +47,8 @@ dependencies {
     compile "com.jakewharton:butterknife:$butterKnifeVersion"
     annotationProcessor "com.jakewharton:butterknife-compiler:$butterKnifeVersion"
 
+    compile 'org.apache.commons:commons-lang3:3.5'
+
     // Testing
     testCompile 'junit:junit:4.12'
 }

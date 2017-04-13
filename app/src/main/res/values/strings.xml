@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">eCarriers Viajante</string>
     <string name="powered_by">Powered by eCarriers &#169;</string>
-    <string name="trip_actvuty_title">Viaje</string>
+    <string name="trip_activity_title">Viaje</string>
+    <string name="trips_activity_title">Viajes</string>
 
     <!-- Strings generales -->
     <string name="msg_no_connection">No hay conexión a Internet.</string>
@@ -34,5 +35,10 @@
     <string name="text_waiting_pickup_state">Retirar</string>
     <string name="text_being_shipped_state">Retirado</string>
     <string name="text_delivered_state">Entregado</string>
+
+    <string name="text_shipment_list">ENVÍOS</string>
+
+    <string name="text_pick_up_address">Retiro:&#160;</string>
+    <string name="text_delivery_address">Entrega:&#160;</string>
 
 </resources>

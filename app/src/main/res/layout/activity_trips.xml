@@ -36,7 +36,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
-                android:layout_marginTop="@dimen/gv_margin_top_bottom"
                 android:layout_marginBottom="@dimen/gv_margin_top_bottom"
                 android:layout_alignParentTop="true"/>
 

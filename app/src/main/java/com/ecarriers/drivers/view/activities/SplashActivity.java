@@ -22,6 +22,7 @@ public class SplashActivity extends AppCompatActivity {
         }
 
         Preferences.setSessionToken(getApplicationContext(), "dummy");
+        Preferences.setCurrentUserEmail(getApplicationContext(), "marengo.martin@gmail.com");
 
         new Timer().schedule(new TimerTask(){
             public void run() {
@@ -34,6 +35,6 @@ public class SplashActivity extends AppCompatActivity {
                     startActivity(i);
                 }
             }
-        }, 2300);
+        }, 1500);
     }
 }

@@ -15,6 +15,8 @@ import com.ecarriers.drivers.models.Trip;
 import com.ecarriers.drivers.utils.DateUtils;
 import com.ecarriers.drivers.view.adapters.listeners.ITripClick;
 
+import org.apache.commons.lang3.text.WordUtils;
+
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -105,8 +107,9 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.TripView> {
                 trip.setDepartureDate("2017-04-13 15:00");
             }
 
-            String visualDepDate = DateUtils.apiToVisual(trip.getDepartureDate());
+            String visualDepDate = DateUtils.apiToLongDate(trip.getDepartureDate());
             if(visualDepDate != null && !visualDepDate.equals("")){
+                visualDepDate = WordUtils.capitalizeFully(visualDepDate);
                 visualDepDate += context.getResources().getString(R.string.suffix_hour);
                 viewHolder.layoutDepartureDate.setVisibility(View.VISIBLE);
                 viewHolder.tvDepartureDate.setText(visualDepDate);

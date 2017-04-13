@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -22,6 +23,8 @@ import com.ecarriers.drivers.utils.Constants;
 import com.ecarriers.drivers.utils.DateUtils;
 import com.ecarriers.drivers.view.adapters.ShipmentPublicationAdapter;
 import com.ecarriers.drivers.view.adapters.listeners.IShipmentPublicationClick;
+
+import org.apache.commons.lang3.text.WordUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -86,7 +89,7 @@ public class TripActivity extends AppCompatActivity implements IShipmentPublicat
 
     private void setupToolbar(){
         if (toolbar != null) {
-            toolbar.setTitle(getResources().getString(R.string.trip_actvuty_title));
+            toolbar.setTitle(getResources().getString(R.string.trip_activity_title));
             setSupportActionBar(toolbar);
         }
 
@@ -119,8 +122,9 @@ public class TripActivity extends AppCompatActivity implements IShipmentPublicat
             // TODO: borrar esto
             trip.setDepartureDate("2017-04-13 15:00");
 
-            String visualDepDate = DateUtils.apiToVisual(trip.getDepartureDate());
+            String visualDepDate = DateUtils.apiToLongDate(trip.getDepartureDate());
             if (visualDepDate != null && !visualDepDate.equals("")){
+                visualDepDate = WordUtils.capitalizeFully(visualDepDate);
                 visualDepDate += getResources().getString(R.string.suffix_hour);
                 layoutDepartureDate.setVisibility(View.VISIBLE);
                 tvDepartureDate.setText(visualDepDate);
@@ -208,6 +212,8 @@ public class TripActivity extends AppCompatActivity implements IShipmentPublicat
         shipmentPublicationAdapter =
                 new ShipmentPublicationAdapter(getApplicationContext(), trip.getShipmentPublications(), this);
         rvShipmentPublications.setAdapter(shipmentPublicationAdapter);
+
+        rvShipmentPublications.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
         rvShipmentPublications.setLayoutManager(new LinearLayoutManager(this));
     }

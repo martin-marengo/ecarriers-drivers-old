@@ -10,6 +10,7 @@ public class DateUtils {
 
     public static final String API_DATE_FORMAT = "yyyy-MM-dd HH:mm";
     public static final String VISUAL_DATE_TIME_FORMAT = "dd/MM/yyyy HH:mm";
+    public static final String LONG_DATE_FORMAT = "dd MMMM, yyyy - HH:mm";
 
     public static Locale getSpanishLocale(){
         return new Locale("es", "ES");
@@ -41,6 +42,42 @@ public class DateUtils {
                     String visual = "";
                     if (calendar != null) {
                         DateFormat df = new SimpleDateFormat(VISUAL_DATE_TIME_FORMAT, getSpanishLocale());
+                        visual = df.format(calendar.getTime());
+                    }
+                    return visual;
+                }
+            }
+        }else {
+            return "";
+        }
+    }
+
+    public static String apiToLongDate(String apiDate){
+
+        if(apiDate != null) {
+            if (apiDate.equals("")) {
+                return "";
+            } else {
+
+                boolean error = false;
+
+                SimpleDateFormat formatter = new SimpleDateFormat(API_DATE_FORMAT, getSpanishLocale());
+                Calendar calendar = null;
+                try {
+                    calendar = Calendar.getInstance();
+                    calendar.setTime(formatter.parse(apiDate));
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    error = true;
+                }
+
+                if (error) {
+                    return "";
+                } else {
+                    String visual = "";
+                    if (calendar != null) {
+                        DateFormat df = new SimpleDateFormat(LONG_DATE_FORMAT, getSpanishLocale());
                         visual = df.format(calendar.getTime());
                     }
                     return visual;

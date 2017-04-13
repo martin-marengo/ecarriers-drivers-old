@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="12dp"
+    android:layout_marginRight="12dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_client"
+            android:layout_width="0dp"
+            android:layout_weight="70"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/tv_title_mid"
+            android:textColor="@color/textColorPrimary"
+            android:paddingLeft="5dp"
+            android:text="Martin Marengo"/>
+
+        <Button
+            android:id="@+id/btn_change_state"
+            android:layout_width="0dp"
+            android:layout_weight="30"
+            android:layout_height="wrap_content"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:text="@string/text_waiting_pickup_state"/>
+
+    </LinearLayout>
+
+
+
+    <TextView
+        android:id="@+id/tv_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/tv_body"
+        android:textColor="@color/textColorSecondary"
+        android:paddingLeft="5dp"
+        android:text="Descripcion bastante larga bla bla bla"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:src="@drawable/ic_location_on_black_18dp"
+            android:padding="3dp"
+            android:layout_gravity="center"
+            android:tint="@color/origin"/>
+
+        <TextView
+            android:id="@+id/tv_origin_address"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:textSize="@dimen/tv_body"
+            android:textColor="@color/textColorPrimary"
+            android:padding="3dp"
+            android:text="Descripcion bastante larga bla bla bla"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:src="@drawable/ic_location_on_black_18dp"
+            android:padding="3dp"
+            android:layout_gravity="center"
+            android:tint="@color/destination"/>
+
+        <TextView
+            android:id="@+id/tv_destination_address"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:textSize="@dimen/tv_body"
+            android:textColor="@color/textColorPrimary"
+            android:padding="3dp"
+            android:text="Descripcion bastante larga bla bla bla"/>
+    </LinearLayout>
+
+</LinearLayout>

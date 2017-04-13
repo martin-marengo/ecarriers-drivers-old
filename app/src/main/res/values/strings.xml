@@ -7,7 +7,6 @@
     <string name="msg_no_connection">No hay conexión a Internet.</string>
     <string name="suffix_hour">&#160;hs.</string>
 
-
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Contraseña</string>
@@ -27,7 +26,13 @@
     <string name="text_trip_driving">Viajando</string>
     <string name="text_trip_finished">Finalizado</string>
 
+    <!-- Strings related to trip details -->
     <string name="text_report_location">REPORTAR UBICACIÓN</string>
     <string name="text_start_trip">COMENZAR VIAJE</string>
     <string name="text_finish_trip">FINALIZAR VIAJE</string>
+
+    <string name="text_waiting_pickup_state">Retirar</string>
+    <string name="text_being_shipped_state">Retirado</string>
+    <string name="text_delivered_state">Entregado</string>
+
 </resources>

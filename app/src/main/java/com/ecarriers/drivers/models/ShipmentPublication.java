@@ -37,7 +37,7 @@ public class ShipmentPublication {
 
     private long tripId;
 
-    public enum ShipmentPublicationStates {
+    public enum States {
 
         STATUS_WAITING_PICKUP("waiting_pickup"),
         STATUS_BEING_SHIPPED("being_shipped"),
@@ -45,7 +45,7 @@ public class ShipmentPublication {
 
         private final String state;
 
-        ShipmentPublicationStates(final String state) {
+        States(final String state) {
             this.state = state;
         }
 

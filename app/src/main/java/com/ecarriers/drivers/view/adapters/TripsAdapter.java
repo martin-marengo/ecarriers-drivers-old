@@ -22,24 +22,24 @@ import butterknife.ButterKnife;
 
 public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.TripView> {
 
-    private ArrayList<Trip> mTrips;
-    private Context mContext;
-    private ITripClick mTripClickListener = null;
+    private ArrayList<Trip> trips;
+    private Context context;
+    private ITripClick tripClickListener = null;
 
     public TripsAdapter(Context context, ArrayList<Trip> trips, ITripClick clickListener) {
-        mTrips = trips;
-        mContext = context;
-        mTripClickListener = clickListener;
+        this.trips = trips;
+        this.context = context;
+        tripClickListener = clickListener;
     }
 
     public void swap(ArrayList<Trip> data){
-        mTrips.clear();
-        mTrips.addAll(data);
+        trips.clear();
+        trips.addAll(data);
         notifyDataSetChanged();
     }
 
     public ArrayList<Trip> getList(){
-        return mTrips;
+        return trips;
     }
 
     class TripView extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -60,32 +60,29 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.TripView> {
 
         @Override
         public void onClick(View view) {
-            mTripClickListener.onTripClick(getAdapterPosition(), mTrips.get(getAdapterPosition()));
+            tripClickListener.onTripClick(getAdapterPosition(), trips.get(getAdapterPosition()));
         }
     }
 
     @Override
     public TripView onCreateViewHolder(ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
-        View complejoView = inflater.inflate(R.layout.trip_item, parent, false);
+        View itemView = inflater.inflate(R.layout.item_trip, parent, false);
 
-        TripView viewHolder = new TripView(complejoView);
-
-        return viewHolder;
+        return new TripView(itemView);
     }
 
     @Override
-    public void onBindViewHolder(final TripView viewHolder, final int position) {
+    public void onBindViewHolder(final TripView viewHolder, int position) {
 
-        final Trip trip = mTrips.get(position);
+        final Trip trip = trips.get(position);
 
         if (trip != null){
             if(trip.getState().equals(Trip.TripStates.STATUS_DRIVING.toString())) {
-                viewHolder.btnStartTrip.setColorFilter(ContextCompat.getColor(mContext, R.color.driving_trip));
+                viewHolder.btnStartTrip.setColorFilter(ContextCompat.getColor(context, R.color.driving_trip));
             }else{
-                viewHolder.btnStartTrip.setColorFilter(ContextCompat.getColor(mContext, R.color.pending_trip));
+                viewHolder.btnStartTrip.setColorFilter(ContextCompat.getColor(context, R.color.pending_trip));
             }
 
             viewHolder.tvOrigin.setText(trip.getOrigin());
@@ -95,12 +92,12 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.TripView> {
                 viewHolder.btnStartTrip.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        mTripClickListener.onStartTripClick(position, trip);
+                        tripClickListener.onStartTripClick(viewHolder.getAdapterPosition(), trip);
                     }
                 });
             } else {
                 viewHolder.btnStartTrip.setEnabled(false);
-                viewHolder.btnStartTrip.setColorFilter(ContextCompat.getColor(mContext, R.color.driving_trip));
+                viewHolder.btnStartTrip.setColorFilter(ContextCompat.getColor(context, R.color.driving_trip));
             }
 
             // TODO: borrar esto
@@ -110,7 +107,7 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.TripView> {
 
             String visualDepDate = DateUtils.apiToVisual(trip.getDepartureDate());
             if(visualDepDate != null && !visualDepDate.equals("")){
-                visualDepDate += mContext.getResources().getString(R.string.suffix_hour);
+                visualDepDate += context.getResources().getString(R.string.suffix_hour);
                 viewHolder.layoutDepartureDate.setVisibility(View.VISIBLE);
                 viewHolder.tvDepartureDate.setText(visualDepDate);
             }else{
@@ -121,7 +118,7 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.TripView> {
 
     @Override
     public int getItemCount() {
-        return mTrips.size();
+        return trips.size();
     }
 }
 

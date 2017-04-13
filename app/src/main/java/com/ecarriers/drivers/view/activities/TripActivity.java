@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -15,15 +16,17 @@ import android.widget.TextView;
 
 import com.ecarriers.drivers.R;
 import com.ecarriers.drivers.data.db.DbDataSource;
+import com.ecarriers.drivers.models.ShipmentPublication;
 import com.ecarriers.drivers.models.Trip;
 import com.ecarriers.drivers.utils.Constants;
 import com.ecarriers.drivers.utils.DateUtils;
 import com.ecarriers.drivers.view.adapters.ShipmentPublicationAdapter;
+import com.ecarriers.drivers.view.adapters.listeners.IShipmentPublicationClick;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class TripActivity extends AppCompatActivity {
+public class TripActivity extends AppCompatActivity implements IShipmentPublicationClick {
 
     private Trip trip;
     private ShipmentPublicationAdapter shipmentPublicationAdapter;
@@ -147,6 +150,8 @@ public class TripActivity extends AppCompatActivity {
             });
 
             toggleButtons();
+
+            setupRecyclerView();
         }
     }
 
@@ -195,6 +200,21 @@ public class TripActivity extends AppCompatActivity {
             btnStartTrip.setVisibility(View.GONE);
             btnStartTrip.setEnabled(false);
         }
+    }
+
+    private void setupRecyclerView(){
+        rvShipmentPublications.setHasFixedSize(true);
+
+        shipmentPublicationAdapter =
+                new ShipmentPublicationAdapter(getApplicationContext(), trip.getShipmentPublications(), this);
+        rvShipmentPublications.setAdapter(shipmentPublicationAdapter);
+
+        rvShipmentPublications.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    @Override
+    public void onShipmentPublicationClick(int position, ShipmentPublication item) {
+
     }
 
     private void exit(){

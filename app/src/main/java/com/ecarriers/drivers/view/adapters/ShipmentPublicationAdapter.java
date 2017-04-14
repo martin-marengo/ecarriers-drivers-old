@@ -57,7 +57,8 @@ public class ShipmentPublicationAdapter
 
         @Override
         public void onClick(View view) {
-            //TODO: mostrar items en un dialogo
+            clickListener.onShipmentPublicationClick(getAdapterPosition(),
+                    shipmentPublications.get(getAdapterPosition()));
         }
     }
 
@@ -71,8 +72,8 @@ public class ShipmentPublicationAdapter
     }
 
     @Override
-    public void onBindViewHolder(ShipmentPublicationView holder, int position) {
-        ShipmentPublication shipmentPublication = shipmentPublications.get(position);
+    public void onBindViewHolder(final ShipmentPublicationView holder, int position) {
+        final ShipmentPublication shipmentPublication = shipmentPublications.get(position);
 
         if(shipmentPublication != null){
             holder.tvClient.setText(shipmentPublication.getClient());
@@ -92,7 +93,12 @@ public class ShipmentPublicationAdapter
             }
             holder.btnChangeState.setText(state);
 
-            //TODO click listener del btn. Dialogo con radio buttons para elegir estado.
+            holder.btnChangeState.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    clickListener.onChangeStateClick(holder.getAdapterPosition(), shipmentPublication);
+                }
+            });
         }
     }
 

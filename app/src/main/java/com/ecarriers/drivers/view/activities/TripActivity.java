@@ -223,6 +223,11 @@ public class TripActivity extends AppCompatActivity implements IShipmentPublicat
 
     }
 
+    @Override
+    public void onChangeStateClick(int position, ShipmentPublication item) {
+
+    }
+
     private void exit(){
         finish();
     }

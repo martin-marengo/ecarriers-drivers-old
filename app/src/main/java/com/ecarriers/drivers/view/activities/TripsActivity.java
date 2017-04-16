@@ -67,14 +67,23 @@ public class TripsActivity extends AppCompatActivity implements ISyncTrips, ITri
                 syncTrips();
             }
         });
+    }
 
-        swipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                swipeRefreshLayout.setRefreshing(true);
-                syncTrips();
-            }
-        });
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (adapter == null) {
+            swipeRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    swipeRefreshLayout.setRefreshing(true);
+                    syncTrips();
+                }
+            });
+        } else{
+            trips = dbDataSource.getActiveTrips();
+            adapter.swap(trips);
+        }
     }
 
     private void setupToolbar(){
@@ -178,7 +187,6 @@ public class TripsActivity extends AppCompatActivity implements ISyncTrips, ITri
 
     @Override
     public void onTripClick(int position, Trip trip) {
-        //Snackbar.make(swipeRefreshLayout, "Click: " + String.valueOf(position), Snackbar.LENGTH_LONG).show();
         if (trip != null) {
             Intent i = new Intent(TripsActivity.this, TripActivity.class);
             i.putExtra(Constants.KEY_TRIP_ID, trip.getId());
@@ -188,9 +196,12 @@ public class TripsActivity extends AppCompatActivity implements ISyncTrips, ITri
 
     @Override
     public void onStartTripClick(int position, Trip trip) {
-        Snackbar.make(swipeRefreshLayout, "Comenzando viaje " + String.valueOf(position), Snackbar.LENGTH_LONG).show();
         trip.setState(Trip.TripStates.STATUS_DRIVING.toString());
-        adapter.notifyDataSetChanged();
+        boolean success = dbDataSource.updateTrip(trip);
+        if(success){
+            adapter.notifyItemChanged(position);
+            // TODO: sync
+        }
     }
 
     private void showMessage(String message){

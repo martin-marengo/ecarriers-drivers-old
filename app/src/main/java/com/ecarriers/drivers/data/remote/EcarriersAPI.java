@@ -3,6 +3,7 @@ package com.ecarriers.drivers.data.remote;
 import android.content.Context;
 
 import com.ecarriers.drivers.data.remote.pojos.LoginResponse;
+import com.ecarriers.drivers.data.remote.pojos.OperationResponse;
 import com.ecarriers.drivers.data.remote.pojos.TripsResponse;
 
 import okhttp3.OkHttpClient;
@@ -15,6 +16,7 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 import static com.ecarriers.drivers.utils.Constants.ECARRIERS_BASE_URL;
 
@@ -32,6 +34,29 @@ public interface EcarriersAPI {
 
     @GET("apidummy/test")
     Call<TripsResponse> getActiveTrips(@Header("Accept") String token);
+
+
+    @GET("mark_as_driving")
+    Call<OperationResponse> markAsDriving(@Header("token") String token,
+                                          @Query("trip_id") long tripId);
+
+    @GET("mark_as_finished")
+    Call<OperationResponse> markAsFinished(@Header("token") String token,
+                                          @Query("trip_id") long tripId);
+
+    @GET("mark_as_being_shipped")
+    Call<OperationResponse> markAsBeingShipped(@Header("token") String token,
+                                               @Query("shipment_publication_id") long shipmentPublicationId);
+
+    @GET("mark_as_delivered")
+    Call<OperationResponse> markAsDelivered(@Header("token") String token,
+                                            @Query("shipment_publication_id") long shipmentPublicationId);
+
+    @GET("report_location")
+    Call<OperationResponse> reportLocation(@Header("token") String token,
+                                           @Query("trip_id") long trip_id,
+                                           @Query("lat") float lat,
+                                           @Query("lng") float lng);
 
     class Factory {
         private static EcarriersAPI ecarriersAPI;

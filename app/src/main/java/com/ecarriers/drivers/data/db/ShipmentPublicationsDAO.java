@@ -10,12 +10,37 @@ import com.ecarriers.drivers.models.ShipmentPublication;
 
 import java.util.ArrayList;
 
+import io.realm.Realm;
 import io.realm.RealmList;
 
 class ShipmentPublicationsDAO extends RealmDAO {
 
     ShipmentPublicationsDAO(Context context){
         super(context);
+    }
+
+    boolean updateShipmentPublication(@NonNull final ShipmentPublication sp) {
+        boolean success = true;
+
+        // Initialize Realm
+        Realm.init(context);
+        // Get a Realm instance for this thread
+        Realm realm = Realm.getDefaultInstance();
+
+        try {
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    ShipmentPublicationDB dbSp = ShipmentPublicationsDAO.mapToEntity(sp);
+                    realm.copyToRealmOrUpdate(dbSp);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            success = false;
+        }
+
+        return success;
     }
 
     // MAPPERS

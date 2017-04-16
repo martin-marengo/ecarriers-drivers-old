@@ -8,9 +8,9 @@ import java.util.Locale;
 
 public class DateUtils {
 
-    public static final String API_DATE_FORMAT = "yyyy-MM-dd HH:mm";
-    public static final String VISUAL_DATE_TIME_FORMAT = "dd/MM/yyyy HH:mm";
-    public static final String LONG_DATE_FORMAT = "dd MMMM, yyyy - HH:mm";
+    public static final String API_DATE_FORMAT = "yyyy-MM-dd";
+    public static final String VISUAL_DATE_TIME_FORMAT = "dd/MM/yyyy";
+    public static final String LONG_DATE_FORMAT = "dd MMMM, yyyy";
 
     public static Locale getSpanishLocale(){
         return new Locale("es", "ES");

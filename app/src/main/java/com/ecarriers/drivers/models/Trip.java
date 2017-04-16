@@ -86,6 +86,25 @@ public class Trip {
         });
     }
 
+    public boolean canFinish(){
+        boolean canFinish = false;
+        if(getState().equals(TripStates.STATUS_DRIVING.toString())){
+            if(getShipmentPublications() != null && !getShipmentPublications().isEmpty()){
+                boolean allDelivered = true;
+                for(ShipmentPublication sp : getShipmentPublications()){
+                    if (!sp.getState().equals(ShipmentPublication.States.STATUS_DELIVERED.toString())){
+                        allDelivered = false;
+                    }
+                    if(allDelivered){
+                        canFinish = true;
+                    }
+                }
+            }
+        }
+
+        return canFinish;
+    }
+
     public boolean canStartTrip(){
         if(this.getState().equals(TripStates.STATUS_HAVE_TO_FETCH_ITEMS.toString())){
             return true;

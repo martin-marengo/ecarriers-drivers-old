@@ -3,9 +3,9 @@ package com.ecarriers.drivers.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import io.realm.RealmObject;
+import java.util.ArrayList;
 
-public class Item extends RealmObject {
+public class Item {
 
     @SerializedName("description")
     @Expose
@@ -39,5 +39,20 @@ public class Item extends RealmObject {
 
     public void setShipmentPublicationId(long shipmentPublicationId) {
         this.shipmentPublicationId = shipmentPublicationId;
+    }
+
+    @Override
+    public String toString() {
+        return getDescription() + " (" + String.valueOf(getQuantity()) + ")";
+    }
+
+    public static String[] getArrayFromList(ArrayList<Item> items){
+        ArrayList<String> itemsList = new ArrayList<>();
+        for(Item item : items){
+            itemsList.add(item.toString());
+        }
+        String[] itemsArray = new String[itemsList.size()];
+        itemsArray = itemsList.toArray(itemsArray);
+        return itemsArray;
     }
 }

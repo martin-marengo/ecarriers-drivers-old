@@ -59,6 +59,18 @@ class TripsDAO extends RealmDAO {
         Realm realm = Realm.getDefaultInstance();
 
         try {
+
+            // Before getting all trips, delete the finished ones.
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    RealmResults<TripDB> finishedTrips = realm.where(TripDB.class)
+                            .equalTo(TripDB.STATE, Trip.TripStates.STATUS_FINISHED.toString())
+                            .findAll();
+                    finishedTrips.deleteAllFromRealm();
+                }
+            });
+
             final RealmResults<TripDB> trips = realm.where(TripDB.class).findAll();
             if (trips != null) {
                 for (TripDB dbTrip : trips) {
@@ -91,6 +103,30 @@ class TripsDAO extends RealmDAO {
         }
 
         return trip;
+    }
+
+    boolean updateTrip(@NonNull final Trip trip) {
+        boolean success = true;
+
+        // Initialize Realm
+        Realm.init(context);
+        // Get a Realm instance for this thread
+        Realm realm = Realm.getDefaultInstance();
+
+        try {
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    TripDB dbTrip = TripsDAO.mapToEntity(trip);
+                    realm.copyToRealmOrUpdate(dbTrip);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            success = false;
+        }
+
+        return success;
     }
 
     // MAPPERS

@@ -110,7 +110,6 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.TripView> {
             String visualDepDate = DateUtils.apiToLongDate(trip.getDepartureDate());
             if(visualDepDate != null && !visualDepDate.equals("")){
                 visualDepDate = WordUtils.capitalizeFully(visualDepDate);
-                visualDepDate += context.getResources().getString(R.string.suffix_hour);
                 viewHolder.layoutDepartureDate.setVisibility(View.VISIBLE);
                 viewHolder.tvDepartureDate.setText(visualDepDate);
             }else{

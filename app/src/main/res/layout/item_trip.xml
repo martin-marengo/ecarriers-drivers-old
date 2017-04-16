@@ -33,17 +33,17 @@
                     android:layout_height="match_parent">
 
                     <ImageView
-                        android:id="@+id/origin_indicator"
+                        android:timestamp="@+timestamp/origin_indicator"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/origin_indicator"
                         android:layout_centerInParent="true"/>
 
                     <View
-                        android:id="@+id/line"
+                        android:timestamp="@+timestamp/line"
                         android:layout_width="2dp"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/origin_indicator"
+                        android:layout_below="@timestamp/origin_indicator"
                         android:layout_centerHorizontal="true"
                         android:background="@color/colorAccent"/>
 
@@ -57,7 +57,7 @@
                     android:gravity="center_vertical">
 
                     <TextView
-                        android:id="@+id/tv_origin"
+                        android:timestamp="@+timestamp/tv_origin"
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
                         android:textSize="@dimen/tv_title_small"
@@ -79,7 +79,7 @@
                     android:layout_height="match_parent">
 
                     <ImageView
-                        android:id="@+id/destination_indicator"
+                        android:timestamp="@+timestamp/destination_indicator"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/destination_indicator"
@@ -88,7 +88,7 @@
                     <View
                         android:layout_width="2dp"
                         android:layout_height="wrap_content"
-                        android:layout_above="@id/destination_indicator"
+                        android:layout_above="@timestamp/destination_indicator"
                         android:layout_centerHorizontal="true"
                         android:background="@color/colorAccent"/>
 
@@ -102,7 +102,7 @@
                     android:gravity="center_vertical">
 
                     <TextView
-                        android:id="@+id/tv_destination"
+                        android:timestamp="@+timestamp/tv_destination"
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
                         android:textSize="@dimen/tv_title_small"
@@ -116,7 +116,7 @@
         </LinearLayout>
 
         <ImageButton
-            android:id="@+id/btn_start_trip"
+            android:timestamp="@+timestamp/btn_start_trip"
             android:layout_width="0dp"
             android:layout_weight="20"
             android:layout_gravity="center"
@@ -130,7 +130,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/layout_date"
+        android:timestamp="@+timestamp/layout_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -144,7 +144,7 @@
             android:tint="@color/icons_generic"/>
 
         <TextView
-            android:id="@+id/tv_departure_date"
+            android:timestamp="@+timestamp/tv_departure_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="@dimen/tv_body"

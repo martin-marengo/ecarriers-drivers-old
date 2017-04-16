@@ -1,10 +1,14 @@
 package com.ecarriers.drivers.data.db.operations;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 public class MarkAsDrivingOp extends RealmObject {
 
-    private int id;
+    public static final int OPERATION_TYPE = 1;
+
+    @PrimaryKey
+    private long timestamp;
     private long tripId;
     private boolean sync;
 
@@ -12,12 +16,12 @@ public class MarkAsDrivingOp extends RealmObject {
         sync = false;
     }
 
-    public int getId() {
-        return id;
+    public long getTimestamp() {
+        return timestamp;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 
     public long getTripId() {
@@ -32,7 +36,7 @@ public class MarkAsDrivingOp extends RealmObject {
         return sync;
     }
 
-    public void setSync() {
-        this.sync = true;
+    public void setSync(boolean sync) {
+        this.sync = sync;
     }
 }

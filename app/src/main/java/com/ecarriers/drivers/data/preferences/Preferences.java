@@ -12,6 +12,7 @@ public class Preferences {
     private static final String CURRENT_TRIP_ID = "current_trip_id";
     private static final String SESSION_TOKEN = "session_token";
     private static final String CURRENT_USER_EMAIL = "current_user_email";
+    private static final String OPERATIONS_QUEUE = "operations_queue";
 
     // Data getters and setters
 
@@ -37,6 +38,14 @@ public class Preferences {
     }
     public static String getCurrentUserEmail(Context context){
         return getSharedPreferences(context).getString(CURRENT_USER_EMAIL, "");
+    }
+
+    public static void setOperationsQueue(Context context, String queue){
+        SharedPreferences.Editor editor = getEditor(context).putString(OPERATIONS_QUEUE, queue);
+        editor.apply();
+    }
+    public static String getOperationsQueue(Context context){
+        return getSharedPreferences(context).getString(OPERATIONS_QUEUE, "");
     }
 
     // SharedPreferences getters

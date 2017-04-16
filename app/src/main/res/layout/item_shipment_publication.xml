@@ -21,7 +21,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tv_client"
+                android:timestamp="@+timestamp/tv_client"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/tv_title_mid"
@@ -30,7 +30,7 @@
 
 
             <TextView
-                android:id="@+id/tv_description"
+                android:timestamp="@+timestamp/tv_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/tv_body"
@@ -40,7 +40,7 @@
 
 
         <Button
-            android:id="@+id/btn_change_state"
+            android:timestamp="@+timestamp/btn_change_state"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="30"
@@ -68,7 +68,7 @@
             android:text="@string/text_pick_up_address"/>
 
         <TextView
-            android:id="@+id/tv_origin_address"
+            android:timestamp="@+timestamp/tv_origin_address"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:textSize="@dimen/tv_body_small"
@@ -89,7 +89,7 @@
             android:text="@string/text_delivery_address"/>
 
         <TextView
-            android:id="@+id/tv_destination_address"
+            android:timestamp="@+timestamp/tv_destination_address"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:textSize="@dimen/tv_body_small"

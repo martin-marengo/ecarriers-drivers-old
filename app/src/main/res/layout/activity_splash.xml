@@ -13,7 +13,7 @@
         android:gravity="center">
 
         <ImageView
-            android:id="@+id/ic_logo"
+            android:timestamp="@+timestamp/ic_logo"
             android:layout_width="@dimen/splash_logo_img"
             android:layout_height="@dimen/splash_logo_img"
             android:layout_centerHorizontal="true"
@@ -23,7 +23,7 @@
             android:textColor="@color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/ic_logo"
+            android:layout_below="@timestamp/ic_logo"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="80dp"
             android:textSize="35sp"

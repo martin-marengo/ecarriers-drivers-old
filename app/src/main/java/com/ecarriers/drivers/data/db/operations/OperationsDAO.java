@@ -15,9 +15,70 @@ public class OperationsDAO {
     private Context context;
     private static final String TIMESTAMP = "timestamp";
     private static final long INVALID_TIMESTAMP = -1;
+    private long lastTimestamp = INVALID_TIMESTAMP;
 
     public OperationsDAO(Context context){
         this.context = context;
+    }
+
+    public OperationsQueue getQueue(){
+        // Get or initialize queue
+        OperationsQueue queue;
+        String operationsJson = Preferences.getOperationsQueue(context);
+        if(!operationsJson.isEmpty()) {
+            queue = OperationsQueue.deserializeOperations(operationsJson);
+        }else{
+            queue = new OperationsQueue();
+            queue.initialize();
+        }
+
+        return queue;
+    }
+
+    public void completeOperation(final int type, final long timestamp){
+        OperationsQueue queue = getQueue();
+        queue.removeOperation(timestamp);
+
+        // Initialize Realm
+        Realm.init(context);
+        // Get a Realm instance for this thread
+        Realm realm = Realm.getDefaultInstance();
+
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+
+                switch (type){
+                    case MarkAsDrivingOp.OPERATION_TYPE:
+                        MarkAsDrivingOp op1 = realm.where(MarkAsDrivingOp.class).equalTo(TIMESTAMP, timestamp).findFirst();
+                        op1.deleteFromRealm();
+                        break;
+
+                    case MarkAsFinishedOp.OPERATION_TYPE:
+                        MarkAsFinishedOp op2 = realm.where(MarkAsFinishedOp.class).equalTo(TIMESTAMP, timestamp).findFirst();
+                        op2.deleteFromRealm();
+                        break;
+
+                    case MarkAsBeingShippedOp.OPERATION_TYPE:
+                        MarkAsBeingShippedOp op4 = realm.where(MarkAsBeingShippedOp.class).equalTo(TIMESTAMP, timestamp).findFirst();
+                        op4.deleteFromRealm();
+                        break;
+
+                    case MarkAsDeliveredOp.OPERATION_TYPE:
+                        MarkAsDeliveredOp op3 = realm.where(MarkAsDeliveredOp.class).equalTo(TIMESTAMP, timestamp).findFirst();
+                        op3.deleteFromRealm();
+                        break;
+
+                    case ReportLocationOp.OPERATION_TYPE:
+                        ReportLocationOp op5 = realm.where(ReportLocationOp.class).equalTo(TIMESTAMP, timestamp).findFirst();
+                        op5.deleteFromRealm();
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        });
     }
 
     /**
@@ -34,16 +95,8 @@ public class OperationsDAO {
             MarkAsDrivingOp savedOperation = getMarkAsDrivingOp(timestamp);
             if(savedOperation != null){
 
-                OperationsQueue queue;
                 try{
-                    // Get or initialize queue
-                    String operationsJson = Preferences.getOperationsQueue(context);
-                    if(!operationsJson.isEmpty()) {
-                        queue = OperationsQueue.deserializeOperations(operationsJson);
-                    }else{
-                        queue = new OperationsQueue();
-                        queue.initialize();
-                    }
+                    OperationsQueue queue = getQueue();
 
                     // Create new operation and enqueue it
                     OperationsQueue.Operation operation = queue.createOperation();
@@ -123,16 +176,8 @@ public class OperationsDAO {
             MarkAsFinishedOp savedOperation = getMarkAsFinishedOp(timestamp);
             if(savedOperation != null){
 
-                OperationsQueue queue;
                 try{
-                    // Get or initialize queue
-                    String operationsJson = Preferences.getOperationsQueue(context);
-                    if(!operationsJson.isEmpty()) {
-                        queue = OperationsQueue.deserializeOperations(operationsJson);
-                    }else{
-                        queue = new OperationsQueue();
-                        queue.initialize();
-                    }
+                    OperationsQueue queue = getQueue();
 
                     // Create new operation and enqueue it
                     OperationsQueue.Operation operation = queue.createOperation();
@@ -212,16 +257,8 @@ public class OperationsDAO {
             MarkAsBeingShippedOp savedOperation = getMarkAsBeingShippedOp(timestamp);
             if(savedOperation != null){
 
-                OperationsQueue queue;
                 try{
-                    // Get or initialize queue
-                    String operationsJson = Preferences.getOperationsQueue(context);
-                    if(!operationsJson.isEmpty()) {
-                        queue = OperationsQueue.deserializeOperations(operationsJson);
-                    }else{
-                        queue = new OperationsQueue();
-                        queue.initialize();
-                    }
+                    OperationsQueue queue = getQueue();
 
                     // Create new operation and enqueue it
                     OperationsQueue.Operation operation = queue.createOperation();
@@ -301,16 +338,8 @@ public class OperationsDAO {
             MarkAsDeliveredOp savedOperation = getMarkAsDeliveredOp(timestamp);
             if(savedOperation != null){
 
-                OperationsQueue queue;
                 try{
-                    // Get or initialize queue
-                    String operationsJson = Preferences.getOperationsQueue(context);
-                    if(!operationsJson.isEmpty()) {
-                        queue = OperationsQueue.deserializeOperations(operationsJson);
-                    }else{
-                        queue = new OperationsQueue();
-                        queue.initialize();
-                    }
+                    OperationsQueue queue = getQueue();
 
                     // Create new operation and enqueue it
                     OperationsQueue.Operation operation = queue.createOperation();
@@ -390,16 +419,8 @@ public class OperationsDAO {
             ReportLocationOp savedOperation = getReportLocationOp(timestamp);
             if(savedOperation != null){
 
-                OperationsQueue queue;
                 try{
-                    // Get or initialize queue
-                    String operationsJson = Preferences.getOperationsQueue(context);
-                    if(!operationsJson.isEmpty()) {
-                        queue = OperationsQueue.deserializeOperations(operationsJson);
-                    }else{
-                        queue = new OperationsQueue();
-                        queue.initialize();
-                    }
+                    OperationsQueue queue = getQueue();
 
                     // Create new operation and enqueue it
                     OperationsQueue.Operation operation = queue.createOperation();
@@ -470,6 +491,11 @@ public class OperationsDAO {
      * */
 
     private long generateTimestamp(){
-        return Long.valueOf(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
+        long timestamp = Long.valueOf(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
+        if(timestamp == lastTimestamp){
+            timestamp ++;
+        }
+        lastTimestamp = timestamp;
+        return timestamp;
     }
 }

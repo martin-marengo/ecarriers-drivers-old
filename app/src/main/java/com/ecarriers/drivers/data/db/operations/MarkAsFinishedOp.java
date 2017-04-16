@@ -6,6 +6,7 @@ import io.realm.annotations.PrimaryKey;
 public class MarkAsFinishedOp extends RealmObject {
 
     public static final int OPERATION_TYPE = 2;
+    public static final String TAG = "mark_as_finished_op";
 
     @PrimaryKey
     private long timestamp;

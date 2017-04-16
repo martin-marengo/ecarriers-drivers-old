@@ -6,8 +6,9 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 
-class OperationsQueue {
+public class OperationsQueue {
 
     void initialize(){
         this.operations = new ArrayList<>();
@@ -20,7 +21,7 @@ class OperationsQueue {
     @SerializedName("pending_ops")
     private ArrayList<Operation> operations;
 
-    class Operation {
+    public class Operation {
 
         @SerializedName("timestamp")
         private long timestamp;
@@ -79,18 +80,24 @@ class OperationsQueue {
         }
     }
 
-    public static Operation getNextOperation(OperationsQueue queue){
+    public Operation getNextOperation(){
         Operation netxOp = null;
-        if(queue != null && queue.getOperations() != null && !queue.getOperations().isEmpty()) {
-            netxOp = queue.getOperations().get(0);
+        if(this.getOperations() != null && !this.getOperations().isEmpty()) {
+            netxOp = this.getOperations().get(0);
         }
         return netxOp;
     }
 
-    public static void removeOperation(OperationsQueue queue, Operation op){
-        if(queue != null && queue.getOperations() != null && !queue.getOperations().isEmpty()) {
+    public void removeOperation(long timestamp){
+        if(this.getOperations() != null && !this.getOperations().isEmpty()) {
             try {
-                queue.getOperations().remove(op);
+                Iterator<Operation> iterator = this.getOperations().iterator();
+                while(iterator.hasNext()){
+                    Operation op = iterator.next();
+                    if(op.getTimestamp() == timestamp){
+                        iterator.remove();
+                    }
+                }
             }catch(Exception e){
                 e.printStackTrace();
             }

@@ -6,6 +6,7 @@ import io.realm.annotations.PrimaryKey;
 public class MarkAsDrivingOp extends RealmObject {
 
     public static final int OPERATION_TYPE = 1;
+    public static final String TAG = "mark_as_driving_op";
 
     @PrimaryKey
     private long timestamp;

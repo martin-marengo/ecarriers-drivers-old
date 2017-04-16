@@ -6,12 +6,13 @@ import io.realm.annotations.PrimaryKey;
 public class ReportLocationOp extends RealmObject {
 
     public static final int OPERATION_TYPE = 5;
+    public static final String TAG = "report_location_op";
 
     @PrimaryKey
     private long timestamp;
     private long tripId;
-    private double lat;
-    private double lng;
+    private float lat;
+    private float lng;
     private boolean sync;
 
     public ReportLocationOp(){
@@ -34,19 +35,19 @@ public class ReportLocationOp extends RealmObject {
         this.tripId = tripId;
     }
 
-    public double getLat() {
+    public float getLat() {
         return lat;
     }
 
-    public void setLat(double lat) {
+    public void setLat(float lat) {
         this.lat = lat;
     }
 
-    public double getLng() {
+    public float getLng() {
         return lng;
     }
 
-    public void setLng(double lng) {
+    public void setLng(float lng) {
         this.lng = lng;
     }
 

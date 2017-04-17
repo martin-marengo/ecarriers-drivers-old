@@ -55,8 +55,8 @@ public interface EcarriersAPI {
     @GET("report_location")
     Call<OperationResponse> reportLocation(@Header("token") String token,
                                            @Query("trip_id") long trip_id,
-                                           @Query("lat") float lat,
-                                           @Query("lng") float lng);
+                                           @Query("lat") double lat,
+                                           @Query("lng") double lng);
 
     class Factory {
         private static EcarriersAPI ecarriersAPI;

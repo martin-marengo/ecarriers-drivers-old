@@ -49,10 +49,18 @@
     <string name="action_change_state">Guardar</string>
 
     <string name="title_cant_finish_trip">No se puede finalizar viaje</string>
-    <string name="msg_cant_finish_trip">Para finalizar un viaje, el mismo debe estar en estado "Viajando" y todos los envíos deben estar entregados.</string>
+    <string name="msg_cant_finish_trip">Para finalizar un viaje, el mismo debe estar en estado VIAJANDO y todos los envíos deben estar entregados.</string>
 
     <string name="title_confirm_finish_trip">Finalizar viaje</string>
     <string name="msg_confirm_finish_trip">¿Estás seguro de finalizar este viaje? No podrás volver a editarlo o verlo.</string>
     <string name="action_finish_trip">FINALIZAR</string>
 
+    <string name="title_send_location">Enviar ubicación</string>
+    <string name="msg_send_location">¿Deseas enviar tu ubicación actual a los clientes de este viaje?</string>
+
+    <string name="msg_report_location_ok">La ubicación se ha enviado correctamente.</string>
+    <string name="msg_report_location_error">No se ha podido enviar la ubicación. Comprueba tu conexión o intenta nuevamente más tarde.</string>
+
+    <string name="msg_no_location_error">No se ha podido obtener tu ubicación actual. Asegúrate de tener la ubicación de tu dispositivo habilitada.</string>
+    <string name="msg_no_location_permission">No tenemos permiso para obtener tu ubicación. Ve a la configuración de la aplicación para otorgar el permiso.</string>
 </resources>

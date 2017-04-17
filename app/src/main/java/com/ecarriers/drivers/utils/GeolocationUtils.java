@@ -1,42 +1,29 @@
 package com.ecarriers.drivers.utils;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.provider.Settings;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
-
-import java.text.DecimalFormat;
 
 public class GeolocationUtils {
 
     public static final double INVALID_GEO_VALUES = 1000;
     private static final String TAG = "GEOLOCATION";
 
-    public static double getDistanciaKm(double latUser, double lonUser, double latTarget, double lonTarget){
-        int Radius = 6371; // radius of earth in Km
-        double lat1 = latTarget;
-        double lat2 = latUser;
-        double lon1 = lonTarget;
-        double lon2 = lonUser;
-        double dLat = Math.toRadians(lat2 - lat1);
-        double dLon = Math.toRadians(lon2 - lon1);
-        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
-                + Math.cos(Math.toRadians(lat1))
-                * Math.cos(Math.toRadians(lat2)) * Math.sin(dLon / 2)
-                * Math.sin(dLon / 2);
-        double c = 2 * Math.asin(Math.sqrt(a));
-        double valueResult = Radius * c;
-        double km = valueResult / 1;
-        DecimalFormat newFormat = new DecimalFormat("####");
-        int kmInDec = Integer.valueOf(newFormat.format(km));
-        double meter = valueResult % 1000;
-        int meterInDec = Integer.valueOf(newFormat.format(meter));
-        /*Log.i("Radius Value", "" + valueResult + "   KM  " + kmInDec
-                + " Meter   " + meterInDec);*/
-        return kmInDec;
+    public static boolean locationPermissionGranted(Context context){
+        boolean hasPermission = false;
+        int hasLocationPermission = ContextCompat.checkSelfPermission(context,
+                Manifest.permission.ACCESS_FINE_LOCATION);
+        if (hasLocationPermission != PackageManager.PERMISSION_GRANTED) {
+            hasPermission = true;
+        }
+        return hasPermission;
     }
 
     public static void printLocation(double lat, double lon){

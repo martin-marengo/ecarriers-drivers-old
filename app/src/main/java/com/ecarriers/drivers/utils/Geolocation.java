@@ -11,9 +11,6 @@ import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
-import com.nexosoluciones.cine.data.ApplicationData;
-import com.nexosoluciones.cine.interfaces.ILocationListener;
-
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -24,7 +21,7 @@ public class Geolocation implements LocationListener {
     private LocationManager mLocationManager;
     private LocationListener mLocationListener;
     //Singleton
-    public static Geolocation mGeolocation;
+    public static Geolocation geolocation;
     private boolean mKeepListening = false;
     private static final String TAG = "GEOLOCATION";
     private static final int TIME_OUT_MS = 10000;
@@ -34,12 +31,12 @@ public class Geolocation implements LocationListener {
     private Timer mListeningTimer = null;
 
     public static Geolocation getInstance(Context context, ILocationListener listener){
-        if(mGeolocation == null){
-            mGeolocation = new Geolocation(context, listener);
+        if(geolocation == null){
+            geolocation = new Geolocation(context, listener);
         }
-        mGeolocation.mContext = context;
-        mGeolocation.mListener = listener;
-        return mGeolocation;
+        geolocation.mContext = context;
+        geolocation.mListener = listener;
+        return geolocation;
     }
 
     private Geolocation(Context context, ILocationListener listener) {
@@ -66,7 +63,7 @@ public class Geolocation implements LocationListener {
 
             String locationProvider = "";
             if(mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-                // begin listening for updates using mobile network or wifi
+                // Begin listening for updates using mobile network or wifi
                 locationProvider = LocationManager.NETWORK_PROVIDER;
             }else{
                 // Or, use GPS location data:
@@ -144,9 +141,6 @@ public class Geolocation implements LocationListener {
     @Override
     public void onLocationChanged(Location location) {
         GeolocationUtils.printLocation(location);
-        double lat = location.getLatitude();
-        double lng = location.getLongitude();
-        ApplicationData.setLastCurrentLocation(mContext, lat, lng);
         if(mKeepListening){
             mKeepListening = false;
             if(mListeningTimer != null) {

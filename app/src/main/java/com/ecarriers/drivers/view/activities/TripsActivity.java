@@ -1,10 +1,14 @@
 package com.ecarriers.drivers.view.activities;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -51,6 +55,8 @@ public class TripsActivity extends AppCompatActivity implements ISyncTrips, ITri
     private boolean showMessage = false;
     private String message = null;
 
+    private static final int ACCESS_LOCATION_PERMISSION = 3;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +80,39 @@ public class TripsActivity extends AppCompatActivity implements ISyncTrips, ITri
     @Override
     protected void onResume() {
         super.onResume();
+        checkLocationPermission();
+    }
+
+    private void checkLocationPermission() {
+        int hasLocationPermission = ContextCompat.checkSelfPermission(getApplicationContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION);
+        if (hasLocationPermission != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    ACCESS_LOCATION_PERMISSION);
+        } else {
+            startApp();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case ACCESS_LOCATION_PERMISSION:
+                // Start app in both cases
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission granted
+                    startApp();
+                } else {
+                    // Permission denied
+                    startApp();
+                }
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    private void startApp(){
         if (adapter == null) {
             swipeRefreshLayout.post(new Runnable() {
                 @Override

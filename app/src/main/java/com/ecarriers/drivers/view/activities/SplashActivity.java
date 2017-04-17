@@ -42,7 +42,7 @@ public class SplashActivity extends AppCompatActivity implements IAsyncResponse 
     }
 
     @Override
-    public void onResponse(boolean exito, String key) {
+    public void onResponse(boolean success, String key) {
         syncEndTime = new Date().getTime();
         long difference = syncEndTime - syncStartTime;
         if(MINIMUM_DELAY < difference){

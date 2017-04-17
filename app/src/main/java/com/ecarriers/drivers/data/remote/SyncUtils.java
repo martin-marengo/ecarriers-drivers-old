@@ -33,10 +33,10 @@ public class SyncUtils implements ISyncOperation {
     private static final boolean SUCCESS = true;
     private static final boolean FAILURE = false;
 
-    private static final String TRIPS = "TRIPS";
-    private static final String OPERATIONS = "OPERATIONS";
-    private static final String TRIP_LOCATION = "TRIP_LOCATION";
-    private static final String ERRORS = "ERRORS";
+    public static final String TRIPS = "TRIPS";
+    public static final String OPERATIONS = "OPERATIONS";
+    public static final String TRIP_LOCATION = "TRIP_LOCATION";
+    public static final String ERRORS = "ERRORS";
 
     private IAsyncResponse listener = null;
 
@@ -92,7 +92,7 @@ public class SyncUtils implements ISyncOperation {
         }
     }
 
-    public void syncReportLocationOp(TripLocation tripLocation, IAsyncResponse listener){
+    public void syncLocation(IAsyncResponse listener, TripLocation tripLocation){
         reportLocation(listener, tripLocation);
     }
 

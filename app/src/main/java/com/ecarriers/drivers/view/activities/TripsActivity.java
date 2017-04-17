@@ -14,9 +14,11 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ecarriers.drivers.R;
 import com.ecarriers.drivers.data.db.DbDataSource;
+import com.ecarriers.drivers.data.db.operations.MarkAsDrivingOp;
 import com.ecarriers.drivers.data.remote.SyncUtils;
 import com.ecarriers.drivers.data.remote.listeners.ISyncTrips;
 import com.ecarriers.drivers.data.remote.pojos.TripsResponse;
@@ -200,7 +202,18 @@ public class TripsActivity extends AppCompatActivity implements ISyncTrips, ITri
         boolean success = dbDataSource.updateTrip(trip);
         if(success){
             adapter.notifyItemChanged(position);
-            // TODO: sync
+            startTripSync(trip);
+        }
+    }
+
+    private void startTripSync(Trip trip){
+        MarkAsDrivingOp op = new MarkAsDrivingOp();
+        op.setTripId(trip.getId());
+
+        SyncUtils syncUtils = new SyncUtils(getApplicationContext());
+        syncUtils.syncMarkAsDrivingOp(op);
+        if(!Connectivity.isConnected(getApplicationContext())){
+            showNoConnectionMessage();
         }
     }
 
@@ -214,5 +227,9 @@ public class TripsActivity extends AppCompatActivity implements ISyncTrips, ITri
         if(currentTask != null && currentTask.getStatus() == AsyncTask.Status.RUNNING){
             currentTask.cancel(true);
         }
+    }
+
+    private void showNoConnectionMessage(){
+        Snackbar.make(rvTrips, R.string.msg_no_connection_operations, Toast.LENGTH_LONG).show();
     }
 }

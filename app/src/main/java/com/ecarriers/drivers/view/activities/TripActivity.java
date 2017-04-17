@@ -3,6 +3,7 @@ package com.ecarriers.drivers.view.activities;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -16,12 +17,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ecarriers.drivers.R;
 import com.ecarriers.drivers.data.db.DbDataSource;
+import com.ecarriers.drivers.data.db.operations.MarkAsBeingShippedOp;
+import com.ecarriers.drivers.data.db.operations.MarkAsDeliveredOp;
+import com.ecarriers.drivers.data.db.operations.MarkAsDrivingOp;
+import com.ecarriers.drivers.data.db.operations.MarkAsFinishedOp;
+import com.ecarriers.drivers.data.remote.SyncUtils;
 import com.ecarriers.drivers.models.Item;
 import com.ecarriers.drivers.models.ShipmentPublication;
 import com.ecarriers.drivers.models.Trip;
+import com.ecarriers.drivers.utils.Connectivity;
 import com.ecarriers.drivers.utils.Constants;
 import com.ecarriers.drivers.utils.DateUtils;
 import com.ecarriers.drivers.view.adapters.ShipmentPublicationAdapter;
@@ -175,7 +183,18 @@ public class TripActivity extends AppCompatActivity implements IShipmentPublicat
         if(success){
             toggleButtons();
             setTvStateText();
-            // TODO: sync
+            startTripSync(trip);
+        }
+    }
+
+    private void startTripSync(Trip trip){
+        MarkAsDrivingOp op = new MarkAsDrivingOp();
+        op.setTripId(trip.getId());
+
+        SyncUtils syncUtils = new SyncUtils(getApplicationContext());
+        syncUtils.syncMarkAsDrivingOp(op);
+        if(!Connectivity.isConnected(getApplicationContext())){
+            showNoConnectionMessage();
         }
     }
 
@@ -275,7 +294,18 @@ public class TripActivity extends AppCompatActivity implements IShipmentPublicat
         if (success) {
             toggleButtons();
             setTvStateText();
-            // TODO: sync
+            finishTripSync(trip);
+        }
+    }
+
+    private void finishTripSync(Trip trip){
+        MarkAsFinishedOp op = new MarkAsFinishedOp();
+        op.setTripId(trip.getId());
+
+        SyncUtils syncUtils = new SyncUtils(getApplicationContext());
+        syncUtils.syncMarkAsFinishedOp(op);
+        if(!Connectivity.isConnected(getApplicationContext())) {
+            showNoConnectionMessage();
         }
     }
 
@@ -337,10 +367,39 @@ public class TripActivity extends AppCompatActivity implements IShipmentPublicat
     }
 
     private void onShipmentPublicationStateChanged(final int position, final ShipmentPublication sp){
-        // TODO: sync
         boolean success = dbDataSource.updateShipmentPublication(sp);
         if (success){
             shipmentPublicationAdapter.notifyItemChanged(position);
+            // Note: there is no endpoint in the API for marking a shipment publication as waiting pickup,
+            // so that state will be managed internally in the app. It's wrong, but I don't give a shit.
+            if(sp.getState().equals(ShipmentPublication.States.STATUS_BEING_SHIPPED.toString())){
+                syncMarkAsBeingShipped(sp);
+            }
+            if(sp.getState().equals(ShipmentPublication.States.STATUS_DELIVERED.toString())){
+                syncMarkAsDelivered(sp);
+            }
+        }
+    }
+
+    private void syncMarkAsBeingShipped(ShipmentPublication sp){
+        MarkAsBeingShippedOp op = new MarkAsBeingShippedOp();
+        op.setShipmentPublicationId(sp.getId());
+
+        SyncUtils syncUtils = new SyncUtils(getApplicationContext());
+        syncUtils.syncMarkAsBeingShippedOp(op);
+        if(!Connectivity.isConnected(getApplicationContext())) {
+            showNoConnectionMessage();
+        }
+    }
+
+    private void syncMarkAsDelivered(ShipmentPublication sp){
+        MarkAsDeliveredOp op = new MarkAsDeliveredOp();
+        op.setShipmentPublicationId(sp.getId());
+
+        SyncUtils syncUtils = new SyncUtils(getApplicationContext());
+        syncUtils.syncMarkAsDeliveredOp(op);
+        if(!Connectivity.isConnected(getApplicationContext())) {
+            showNoConnectionMessage();
         }
     }
 
@@ -358,5 +417,9 @@ public class TripActivity extends AppCompatActivity implements IShipmentPublicat
 
     private void exit(){
         finish();
+    }
+
+    private void showNoConnectionMessage(){
+        Snackbar.make(toolbar, R.string.msg_no_connection_operations, Toast.LENGTH_LONG).show();
     }
 }

@@ -13,7 +13,7 @@
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
-            android:timestamp="@+timestamp/toolbar"
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
@@ -55,7 +55,7 @@
                     android:layout_marginTop="5dp">
 
                     <TextView
-                        android:timestamp="@+timestamp/tv_trip_state"
+                        android:id="@+id/tv_trip_state"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/tv_title_big"
@@ -75,17 +75,17 @@
                             android:layout_height="match_parent">
 
                             <ImageView
-                                android:timestamp="@+timestamp/origin_indicator"
+                                android:id="@+id/origin_indicator"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:src="@drawable/origin_indicator"
                                 android:layout_centerInParent="true"/>
 
                             <View
-                                android:timestamp="@+timestamp/line"
+                                android:id="@+id/line"
                                 android:layout_width="2dp"
                                 android:layout_height="wrap_content"
-                                android:layout_below="@timestamp/origin_indicator"
+                                android:layout_below="@id/origin_indicator"
                                 android:layout_centerHorizontal="true"
                                 android:background="@color/colorAccent"/>
 
@@ -99,7 +99,7 @@
                             android:gravity="center_vertical">
 
                             <TextView
-                                android:timestamp="@+timestamp/tv_origin"
+                                android:id="@+id/tv_origin"
                                 android:layout_height="wrap_content"
                                 android:layout_width="wrap_content"
                                 android:textSize="@dimen/tv_title_small"
@@ -121,7 +121,7 @@
                             android:layout_height="match_parent">
 
                             <ImageView
-                                android:timestamp="@+timestamp/destination_indicator"
+                                android:id="@+id/destination_indicator"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:src="@drawable/destination_indicator"
@@ -130,7 +130,7 @@
                             <View
                                 android:layout_width="2dp"
                                 android:layout_height="wrap_content"
-                                android:layout_above="@timestamp/destination_indicator"
+                                android:layout_above="@id/destination_indicator"
                                 android:layout_centerHorizontal="true"
                                 android:background="@color/colorAccent"/>
 
@@ -144,7 +144,7 @@
                             android:gravity="center_vertical">
 
                             <TextView
-                                android:timestamp="@+timestamp/tv_destination"
+                                android:id="@+id/tv_destination"
                                 android:layout_height="wrap_content"
                                 android:layout_width="wrap_content"
                                 android:textSize="@dimen/tv_title_small"
@@ -156,7 +156,7 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:timestamp="@+timestamp/layout_date"
+                        android:id="@+id/layout_date"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
@@ -170,7 +170,7 @@
                             android:tint="@color/icons_generic"/>
 
                         <TextView
-                            android:timestamp="@+timestamp/tv_departure_date"
+                            android:id="@+id/tv_departure_date"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textSize="@dimen/tv_body"
@@ -186,14 +186,14 @@
                         android:orientation="horizontal">
 
                         <Button
-                            android:timestamp="@+timestamp/btn_start_trip"
+                            android:id="@+id/btn_start_trip"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/text_start_trip"
                             style="@style/Widget.AppCompat.Button.Borderless.Colored"/>
 
                         <Button
-                            android:timestamp="@+timestamp/btn_report_location"
+                            android:id="@+id/btn_report_location"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/text_report_location"
@@ -202,7 +202,7 @@
                             android:textColor="@color/colorPrimaryDark"/>
 
                         <Button
-                            android:timestamp="@+timestamp/btn_finish_trip"
+                            android:id="@+id/btn_finish_trip"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/text_finish_trip"
@@ -227,7 +227,7 @@
                 android:layout_marginLeft="12dp"/>
 
             <android.support.v7.widget.RecyclerView
-                android:timestamp="@+timestamp/rv_shipment_publications"
+                android:id="@+id/rv_shipment_publications"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clipToPadding="false"

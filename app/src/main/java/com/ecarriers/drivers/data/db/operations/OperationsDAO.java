@@ -69,11 +69,6 @@ public class OperationsDAO {
                         op3.deleteFromRealm();
                         break;
 
-                    case ReportLocationOp.OPERATION_TYPE:
-                        ReportLocationOp op5 = realm.where(ReportLocationOp.class).equalTo(TIMESTAMP, timestamp).findFirst();
-                        op5.deleteFromRealm();
-                        break;
-
                     default:
                         break;
                 }
@@ -398,87 +393,6 @@ public class OperationsDAO {
         MarkAsDeliveredOp op = null;
         try {
             op = realm.where(MarkAsDeliveredOp.class).equalTo(TIMESTAMP, timestamp).findFirst();
-        } catch(Exception e){
-            e.printStackTrace();
-        }
-
-        return op;
-    }
-
-    /**
-     * REPORT LOCATION
-     * */
-
-    public boolean enqueueReportLocationOp(@NonNull ReportLocationOp op){
-        boolean success = true;
-        op.setSync(false);
-
-        long timestamp = insertReportLocationOp(op);
-        if(timestamp != INVALID_TIMESTAMP){
-
-            ReportLocationOp savedOperation = getReportLocationOp(timestamp);
-            if(savedOperation != null){
-
-                try{
-                    OperationsQueue queue = getQueue();
-
-                    // Create new operation and enqueue it
-                    OperationsQueue.Operation operation = queue.createOperation();
-                    operation.setTimestamp(timestamp);
-                    operation.setOperationType(ReportLocationOp.OPERATION_TYPE);
-                    queue.getOperations().add(operation);
-
-                    // Save queue back to preferences
-                    String newOperationsJson = OperationsQueue.serializeOperations(queue);
-                    Preferences.setOperationsQueue(context, newOperationsJson);
-
-                } catch(Exception e) {
-                    e.printStackTrace();
-                    success = false;
-                }
-
-            }else{
-                success = false;
-            }
-        } else {
-            success = false;
-        }
-        return success;
-    }
-
-    private long insertReportLocationOp(@NonNull final ReportLocationOp op){
-        final long timestamp = generateTimestamp();
-
-        // Initialize Realm
-        Realm.init(context);
-        // Get a Realm instance for this thread
-        Realm realm = Realm.getDefaultInstance();
-
-        try {
-            realm.executeTransaction(new Realm.Transaction() {
-                @Override
-                public void execute(Realm realm) {
-                    op.setTimestamp(timestamp);
-                    realm.copyToRealmOrUpdate(op);
-                }
-            });
-
-            return timestamp;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return INVALID_TIMESTAMP;
-        }
-    }
-
-    public ReportLocationOp getReportLocationOp(long timestamp){
-        // Initialize Realm
-        Realm.init(context);
-        // Get a Realm instance for this thread
-        Realm realm = Realm.getDefaultInstance();
-
-        ReportLocationOp op = null;
-        try {
-            op = realm.where(ReportLocationOp.class).equalTo(TIMESTAMP, timestamp).findFirst();
         } catch(Exception e){
             e.printStackTrace();
         }

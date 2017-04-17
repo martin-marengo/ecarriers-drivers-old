@@ -10,13 +10,13 @@ import com.ecarriers.drivers.data.db.operations.MarkAsDrivingOp;
 import com.ecarriers.drivers.data.db.operations.MarkAsFinishedOp;
 import com.ecarriers.drivers.data.db.operations.OperationsDAO;
 import com.ecarriers.drivers.data.db.operations.OperationsQueue;
-import com.ecarriers.drivers.data.db.operations.ReportLocationOp;
 import com.ecarriers.drivers.data.preferences.Preferences;
 import com.ecarriers.drivers.data.remote.listeners.IAsyncResponse;
 import com.ecarriers.drivers.data.remote.listeners.ISyncOperation;
 import com.ecarriers.drivers.data.remote.listeners.ISyncTrips;
 import com.ecarriers.drivers.data.remote.pojos.OperationResponse;
 import com.ecarriers.drivers.data.remote.pojos.TripsResponse;
+import com.ecarriers.drivers.models.TripLocation;
 import com.ecarriers.drivers.utils.Connectivity;
 
 import retrofit2.Call;
@@ -34,19 +34,23 @@ public class SyncUtils implements ISyncOperation {
     private static final boolean FAILURE = false;
 
     private static final String TRIPS = "TRIPS";
+    private static final String OPERATIONS = "OPERATIONS";
+    private static final String TRIP_LOCATION = "TRIP_LOCATION";
+    private static final String ERRORS = "ERRORS";
 
     private IAsyncResponse listener = null;
 
     public SyncUtils(Context context){
         this.context = context;
         operationsDAO = new OperationsDAO(context);
+        ecarriersAPI = EcarriersAPI.Factory.getInstance(context);
     }
 
     public void getActiveTrips(ISyncTrips listener){
-        ecarriersAPI = EcarriersAPI.Factory.getInstance(context);
         downloadActiveTrips(listener);
     }
 
+    // Run at startup, before downloading active trips.
     public void syncAllOperations(IAsyncResponse listener){
         this.listener = listener;
         syncOperations();
@@ -88,13 +92,8 @@ public class SyncUtils implements ISyncOperation {
         }
     }
 
-    public void syncReportLocationOp(@NonNull ReportLocationOp operation){
-        this.listener = null;
-        boolean enqueued = operationsDAO.enqueueReportLocationOp(operation);
-
-        if(enqueued && Connectivity.isConnected(context)){
-            syncOperations();
-        }
+    public void syncReportLocationOp(TripLocation tripLocation, IAsyncResponse listener){
+        reportLocation(listener, tripLocation);
     }
 
     private void syncOperations(){
@@ -103,6 +102,12 @@ public class SyncUtils implements ISyncOperation {
         OperationsQueue.Operation nextOp = queue.getNextOperation();
         if(nextOp != null){
             syncOperation(nextOp);
+        }else{
+            // If it get here, is because there is no ops to run or all were successfully executed.
+            // Also the listener can be null and just finish without notifying anywhere.
+            if(this.listener != null){
+                listener.onResponse(SUCCESS, OPERATIONS);
+            }
         }
     }
 
@@ -135,14 +140,6 @@ public class SyncUtils implements ISyncOperation {
                     markAsDelivered(this, markAsDeliveredOp);
                 }
                 break;
-
-            case ReportLocationOp.OPERATION_TYPE:
-                ReportLocationOp reportLocationOp = operationsDAO.getReportLocationOp(op.getTimestamp());
-                if(reportLocationOp != null){
-                    reportLocation(this, reportLocationOp);
-                }
-                break;
-
             default:
                 break;
         }
@@ -182,6 +179,7 @@ public class SyncUtils implements ISyncOperation {
             public void onResponse(Call<OperationResponse> call, Response<OperationResponse> response) {
                 if(response.isSuccessful()) {
                     if (response.body() != null) {
+                        // TODO: ver si no viene algun error dentro de la respuesta exitosa.
                         operationsDAO.completeOperation(MarkAsDrivingOp.OPERATION_TYPE, op.getTimestamp());
                         listener.onResponse(SUCCESS, response.body());
                     }
@@ -208,6 +206,7 @@ public class SyncUtils implements ISyncOperation {
             public void onResponse(Call<OperationResponse> call, Response<OperationResponse> response) {
                 if(response.isSuccessful()) {
                     if (response.body() != null) {
+                        // TODO: ver si no viene algun error dentro de la respuesta exitosa.
                         operationsDAO.completeOperation(MarkAsFinishedOp.OPERATION_TYPE, op.getTimestamp());
                         listener.onResponse(SUCCESS, response.body());
                     }
@@ -234,6 +233,7 @@ public class SyncUtils implements ISyncOperation {
             public void onResponse(Call<OperationResponse> call, Response<OperationResponse> response) {
                 if(response.isSuccessful()) {
                     if (response.body() != null) {
+                        // TODO: ver si no viene algun error dentro de la respuesta exitosa.
                         operationsDAO.completeOperation(MarkAsBeingShippedOp.OPERATION_TYPE, op.getTimestamp());
                         listener.onResponse(SUCCESS, response.body());
                     }
@@ -260,6 +260,7 @@ public class SyncUtils implements ISyncOperation {
             public void onResponse(Call<OperationResponse> call, Response<OperationResponse> response) {
                 if(response.isSuccessful()) {
                     if (response.body() != null) {
+                        // TODO: ver si no viene algun error dentro de la respuesta exitosa.
                         operationsDAO.completeOperation(MarkAsDeliveredOp.OPERATION_TYPE, op.getTimestamp());
                         listener.onResponse(SUCCESS, response.body());
                     }
@@ -277,41 +278,50 @@ public class SyncUtils implements ISyncOperation {
         });
     }
 
-    private void reportLocation(final ISyncOperation listener, final ReportLocationOp op){
+    private void reportLocation(final IAsyncResponse listener, final TripLocation loc){
         Call<OperationResponse> call = ecarriersAPI.reportLocation(
-                Preferences.getSessionToken(context), op.getTripId(), op.getLat(), op.getLng());
+                Preferences.getSessionToken(context), loc.getTripId(), loc.getLat(), loc.getLng());
 
         call.enqueue(new Callback<OperationResponse>() {
             @Override
             public void onResponse(Call<OperationResponse> call, Response<OperationResponse> response) {
                 if(response.isSuccessful()) {
                     if (response.body() != null) {
-                        operationsDAO.completeOperation(ReportLocationOp.OPERATION_TYPE, op.getTimestamp());
-                        listener.onResponse(SUCCESS, response.body());
+                        listener.onResponse(SUCCESS,TRIP_LOCATION);
                     }
                 }else{
-                    logOnUnsuccesfulResponse(response, ReportLocationOp.TAG);
-                    listener.onResponse(FAILURE, new OperationResponse());
+                    logOnUnsuccesfulResponse(response, TRIP_LOCATION);
+                    listener.onResponse(FAILURE, TRIP_LOCATION);
                 }
             }
 
             @Override
             public void onFailure(Call<OperationResponse> call, Throwable t) {
                 logOnFailure(t);
-                listener.onResponse(FAILURE, new OperationResponse());
+                listener.onResponse(FAILURE, TRIP_LOCATION);
             }
         });
     }
 
     @Override
     public void onResponse(boolean success, OperationResponse response) {
-
+        if(success){
+            // In case of success, keep synchronizing ops until there is no more.
+            Log.d(OPERATIONS, response.getSuccess());
+            syncOperations();
+        }else{
+            // In case of failure, stop running operations and notify the listener if it's needed.
+            Log.d(OPERATIONS, response.getError());
+            if(this.listener != null){
+                listener.onResponse(FAILURE, OPERATIONS);
+            }
+        }
     }
 
     private void logOnFailure(Throwable t){
         try {
             if (t != null && t.getCause() != null) {
-                Log.e("ERROR", t.getCause().getMessage());
+                Log.e(ERRORS, t.getCause().getMessage());
             }
         }catch(Exception e){
             e.printStackTrace();
@@ -320,7 +330,7 @@ public class SyncUtils implements ISyncOperation {
 
     private void logOnUnsuccesfulResponse(Response response, String tag){
         try {
-            Log.e("ERROR", tag + " " + response.errorBody().string());
+            Log.e(ERRORS, tag + " " + response.errorBody().string());
         }catch(Exception e){
             e.printStackTrace();
         }

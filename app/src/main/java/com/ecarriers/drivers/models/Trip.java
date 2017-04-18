@@ -21,7 +21,7 @@ public class Trip {
     @Expose
     private String destination;
 
-    @SerializedName("state")
+    @SerializedName("status")
     @Expose
     private String state;
 

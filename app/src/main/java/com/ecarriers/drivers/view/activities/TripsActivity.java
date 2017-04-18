@@ -24,8 +24,8 @@ import com.ecarriers.drivers.R;
 import com.ecarriers.drivers.data.db.DbDataSource;
 import com.ecarriers.drivers.data.db.operations.MarkAsDrivingOp;
 import com.ecarriers.drivers.data.remote.SyncUtils;
-import com.ecarriers.drivers.data.remote.listeners.ISyncTrips;
-import com.ecarriers.drivers.data.remote.pojos.TripsResponse;
+import com.ecarriers.drivers.data.remote.listeners.ITripsListener;
+import com.ecarriers.drivers.data.remote.responses.TripsResponse;
 import com.ecarriers.drivers.models.Trip;
 import com.ecarriers.drivers.utils.Connectivity;
 import com.ecarriers.drivers.utils.Constants;
@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class TripsActivity extends AppCompatActivity implements ISyncTrips, ITripClick {
+public class TripsActivity extends AppCompatActivity implements ITripsListener, ITripClick {
 
     @BindView(R.id.swipe_layout) SwipeRefreshLayout swipeRefreshLayout = null;
     @BindView(R.id.rv_trips) RecyclerView rvTrips = null;
@@ -69,6 +69,7 @@ public class TripsActivity extends AppCompatActivity implements ISyncTrips, ITri
 
         swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
         swipeRefreshLayout.setEnabled(false);
+        swipeRefreshLayout.setDistanceToTriggerSync(Constants.DISTANCE_TO_TRIGGER_SYNC);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

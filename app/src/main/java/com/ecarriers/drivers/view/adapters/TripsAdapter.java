@@ -102,11 +102,6 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.TripView> {
                 viewHolder.btnStartTrip.setColorFilter(ContextCompat.getColor(context, R.color.driving_trip));
             }
 
-            // TODO: borrar esto
-            if(position == 0) {
-                trip.setDepartureDate("2017-04-13 15:00");
-            }
-
             String visualDepDate = DateUtils.apiToLongDate(trip.getDepartureDate());
             if(visualDepDate != null && !visualDepDate.equals("")){
                 visualDepDate = WordUtils.capitalizeFully(visualDepDate);

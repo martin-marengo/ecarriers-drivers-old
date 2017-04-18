@@ -2,61 +2,55 @@ package com.ecarriers.drivers.data.remote;
 
 import android.content.Context;
 
-import com.ecarriers.drivers.data.remote.pojos.LoginResponse;
-import com.ecarriers.drivers.data.remote.pojos.OperationResponse;
-import com.ecarriers.drivers.data.remote.pojos.TripsResponse;
+import com.ecarriers.drivers.data.remote.requests.LoginRequest;
+import com.ecarriers.drivers.data.remote.requests.MarkAsBeingShippedRequest;
+import com.ecarriers.drivers.data.remote.requests.MarkAsDeliveredRequest;
+import com.ecarriers.drivers.data.remote.requests.MarkAsDrivingRequest;
+import com.ecarriers.drivers.data.remote.requests.MarkAsFinishedRequest;
+import com.ecarriers.drivers.data.remote.requests.ReportLocationRequest;
+import com.ecarriers.drivers.data.remote.responses.LoginResponse;
+import com.ecarriers.drivers.data.remote.responses.OperationResponse;
+import com.ecarriers.drivers.data.remote.responses.TripsResponse;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
-import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Query;
 
 import static com.ecarriers.drivers.utils.Constants.ECARRIERS_BASE_URL;
 
 public interface EcarriersAPI {
 
-    @FormUrlEncoded
-    @POST("signin")
-    Call<LoginResponse> login(@Field("user") String user,
-                              @Field("password") String password);
+    @POST("carriers/login")
+    Call<LoginResponse> login(@Body LoginRequest request);
 
-    // All trips either pendings or traveling.
-//    @FormUrlEncoded
-//    @POST("trips/actives")
-//    Call<TripsResponse> getActiveTrips(@Header("token") String token);
+    @GET("trips/non_finished")
+    Call<TripsResponse> getActiveTrips(@Query("api_token") String apiToken);
 
-    @GET("apidummy/test")
-    Call<TripsResponse> getActiveTrips(@Header("Accept") String token);
+    @PUT("trips/mark_as_driving")
+    Call<OperationResponse> markAsDriving(@Body MarkAsDrivingRequest request);
 
+    @PUT("trips/mark_as_finished")
+    Call<OperationResponse> markAsFinished(@Body MarkAsFinishedRequest request);
 
-    @GET("mark_as_driving")
-    Call<OperationResponse> markAsDriving(@Header("token") String token,
-                                          @Query("trip_id") long tripId);
+    @PUT("shipment_publication/mark_as_being_shipped")
+    Call<OperationResponse> markAsBeingShipped(@Body MarkAsBeingShippedRequest request);
 
-    @GET("mark_as_finished")
-    Call<OperationResponse> markAsFinished(@Header("token") String token,
-                                          @Query("trip_id") long tripId);
+    @PUT("shipment_publication/mark_as_delivered")
+    Call<OperationResponse> markAsDelivered(@Body MarkAsDeliveredRequest request);
 
-    @GET("mark_as_being_shipped")
-    Call<OperationResponse> markAsBeingShipped(@Header("token") String token,
-                                               @Query("shipment_publication_id") long shipmentPublicationId);
+    @POST("location_reports/report")
+    Call<OperationResponse> reportLocation(@Body ReportLocationRequest request);
 
-    @GET("mark_as_delivered")
-    Call<OperationResponse> markAsDelivered(@Header("token") String token,
-                                            @Query("shipment_publication_id") long shipmentPublicationId);
-
-    @GET("report_location")
-    Call<OperationResponse> reportLocation(@Header("token") String token,
-                                           @Query("trip_id") long trip_id,
-                                           @Query("lat") double lat,
-                                           @Query("lng") double lng);
+    // Not used
+//    @GET("trips/{:id}")
+//    Call<TripsResponse> getActiveTrips(@Path("id") String tripId, @Query("api_token") String apiToken);
 
     class Factory {
         private static EcarriersAPI ecarriersAPI;

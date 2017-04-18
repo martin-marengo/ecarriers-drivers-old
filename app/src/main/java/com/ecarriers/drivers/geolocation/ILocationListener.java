@@ -1,4 +1,4 @@
-package com.ecarriers.drivers.utils;
+package com.ecarriers.drivers.geolocation;
 
 import android.location.Location;
 

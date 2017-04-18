@@ -1,4 +1,4 @@
-package com.ecarriers.drivers.data.remote.pojos;
+package com.ecarriers.drivers.data.remote.responses;
 
 import com.google.gson.annotations.SerializedName;
 

@@ -1,6 +1,6 @@
 package com.ecarriers.drivers.data.remote.listeners;
 
-public interface IAsyncResponse {
+public interface IGenericListener {
 
     void onResponse(boolean success, String key);
 }

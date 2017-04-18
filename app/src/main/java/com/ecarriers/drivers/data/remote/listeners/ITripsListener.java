@@ -1,8 +1,8 @@
 package com.ecarriers.drivers.data.remote.listeners;
 
-import com.ecarriers.drivers.data.remote.pojos.TripsResponse;
+import com.ecarriers.drivers.data.remote.responses.TripsResponse;
 
-public interface ISyncTrips {
+public interface ITripsListener {
 
     void onResponse(boolean success, TripsResponse response);
 }

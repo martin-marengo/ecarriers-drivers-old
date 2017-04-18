@@ -1,4 +1,4 @@
-package com.ecarriers.drivers.utils;
+package com.ecarriers.drivers.geolocation;
 
 import android.Manifest;
 import android.content.Context;

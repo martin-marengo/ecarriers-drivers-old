@@ -31,7 +31,7 @@ import com.ecarriers.drivers.data.db.operations.MarkAsDeliveredOp;
 import com.ecarriers.drivers.data.db.operations.MarkAsDrivingOp;
 import com.ecarriers.drivers.data.db.operations.MarkAsFinishedOp;
 import com.ecarriers.drivers.data.remote.SyncUtils;
-import com.ecarriers.drivers.data.remote.listeners.IAsyncResponse;
+import com.ecarriers.drivers.data.remote.listeners.IGenericListener;
 import com.ecarriers.drivers.models.Item;
 import com.ecarriers.drivers.models.ShipmentPublication;
 import com.ecarriers.drivers.models.Trip;
@@ -39,9 +39,9 @@ import com.ecarriers.drivers.models.TripLocation;
 import com.ecarriers.drivers.utils.Connectivity;
 import com.ecarriers.drivers.utils.Constants;
 import com.ecarriers.drivers.utils.DateUtils;
-import com.ecarriers.drivers.utils.Geolocation;
-import com.ecarriers.drivers.utils.GeolocationUtils;
-import com.ecarriers.drivers.utils.ILocationListener;
+import com.ecarriers.drivers.geolocation.Geolocation;
+import com.ecarriers.drivers.geolocation.GeolocationUtils;
+import com.ecarriers.drivers.geolocation.ILocationListener;
 import com.ecarriers.drivers.view.adapters.ShipmentPublicationAdapter;
 import com.ecarriers.drivers.view.adapters.listeners.IShipmentPublicationClick;
 
@@ -51,10 +51,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.ecarriers.drivers.utils.Geolocation.geolocation;
+import static com.ecarriers.drivers.geolocation.Geolocation.geolocation;
 
 public class TripActivity extends AppCompatActivity implements
-        IShipmentPublicationClick, ILocationListener, IAsyncResponse {
+        IShipmentPublicationClick, ILocationListener, IGenericListener {
 
     private Trip trip;
     private ShipmentPublicationAdapter shipmentPublicationAdapter;
@@ -144,9 +144,6 @@ public class TripActivity extends AppCompatActivity implements
 
             tvOrigin.setText(trip.getOrigin());
             tvDestination.setText(trip.getDestination());
-
-            // TODO: borrar esto
-            trip.setDepartureDate("2017-04-13 15:00");
 
             String visualDepDate = DateUtils.apiToLongDate(trip.getDepartureDate());
             if (visualDepDate != null && !visualDepDate.equals("")){

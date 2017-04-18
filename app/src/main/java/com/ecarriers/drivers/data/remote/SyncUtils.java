@@ -11,11 +11,19 @@ import com.ecarriers.drivers.data.db.operations.MarkAsFinishedOp;
 import com.ecarriers.drivers.data.db.operations.OperationsDAO;
 import com.ecarriers.drivers.data.db.operations.OperationsQueue;
 import com.ecarriers.drivers.data.preferences.Preferences;
-import com.ecarriers.drivers.data.remote.listeners.IAsyncResponse;
-import com.ecarriers.drivers.data.remote.listeners.ISyncOperation;
-import com.ecarriers.drivers.data.remote.listeners.ISyncTrips;
-import com.ecarriers.drivers.data.remote.pojos.OperationResponse;
-import com.ecarriers.drivers.data.remote.pojos.TripsResponse;
+import com.ecarriers.drivers.data.remote.listeners.IGenericListener;
+import com.ecarriers.drivers.data.remote.listeners.ILoginListener;
+import com.ecarriers.drivers.data.remote.listeners.IOperationListener;
+import com.ecarriers.drivers.data.remote.listeners.ITripsListener;
+import com.ecarriers.drivers.data.remote.requests.LoginRequest;
+import com.ecarriers.drivers.data.remote.requests.MarkAsBeingShippedRequest;
+import com.ecarriers.drivers.data.remote.requests.MarkAsDeliveredRequest;
+import com.ecarriers.drivers.data.remote.requests.MarkAsDrivingRequest;
+import com.ecarriers.drivers.data.remote.requests.MarkAsFinishedRequest;
+import com.ecarriers.drivers.data.remote.requests.ReportLocationRequest;
+import com.ecarriers.drivers.data.remote.responses.LoginResponse;
+import com.ecarriers.drivers.data.remote.responses.OperationResponse;
+import com.ecarriers.drivers.data.remote.responses.TripsResponse;
 import com.ecarriers.drivers.models.TripLocation;
 import com.ecarriers.drivers.utils.Connectivity;
 
@@ -23,7 +31,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SyncUtils implements ISyncOperation {
+public class SyncUtils implements IOperationListener {
 
     private Context context;
     private OperationsDAO operationsDAO;
@@ -33,12 +41,13 @@ public class SyncUtils implements ISyncOperation {
     private static final boolean SUCCESS = true;
     private static final boolean FAILURE = false;
 
+    public static final String LOGIN = "LOGIN";
     public static final String TRIPS = "TRIPS";
     public static final String OPERATIONS = "OPERATIONS";
     public static final String TRIP_LOCATION = "TRIP_LOCATION";
     public static final String ERRORS = "ERRORS";
 
-    private IAsyncResponse listener = null;
+    private IGenericListener listener = null;
 
     public SyncUtils(Context context){
         this.context = context;
@@ -46,12 +55,16 @@ public class SyncUtils implements ISyncOperation {
         ecarriersAPI = EcarriersAPI.Factory.getInstance(context);
     }
 
-    public void getActiveTrips(ISyncTrips listener){
+    public void login(ILoginListener listener, String email, String password){
+        attemptLogin(listener, email, password);
+    }
+
+    public void getActiveTrips(ITripsListener listener){
         downloadActiveTrips(listener);
     }
 
     // Run at startup, before downloading active trips.
-    public void syncAllOperations(IAsyncResponse listener){
+    public void syncAllOperations(IGenericListener listener){
         this.listener = listener;
         syncOperations();
     }
@@ -92,7 +105,7 @@ public class SyncUtils implements ISyncOperation {
         }
     }
 
-    public void syncLocation(IAsyncResponse listener, TripLocation tripLocation){
+    public void syncLocation(IGenericListener listener, TripLocation tripLocation){
         reportLocation(listener, tripLocation);
     }
 
@@ -145,10 +158,32 @@ public class SyncUtils implements ISyncOperation {
         }
     }
 
-    private void downloadActiveTrips(final ISyncTrips listener){
-        // TODO: corregir
-        //Call<TripsResponse> call = ecarriersAPI.getActiveTrips(Preferences.getSessionToken(context));
-        Call<TripsResponse> call = ecarriersAPI.getActiveTrips("application/json");
+    private void attemptLogin(final ILoginListener listener, String email, String password){
+        LoginRequest loginRequest = new LoginRequest(email, password);
+        Call<LoginResponse> call = ecarriersAPI.login(loginRequest);
+        call.enqueue(new Callback<LoginResponse>() {
+            @Override
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                if(response.isSuccessful()) {
+                    if (response.body() != null) {
+                        listener.onResponse(SUCCESS, response.body());
+                    }
+                }else{
+                    logOnUnsuccesfulResponse(response, LOGIN);
+                    listener.onResponse(FAILURE, new LoginResponse());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
+                logOnFailure(t);
+                listener.onResponse(FAILURE, new LoginResponse());
+            }
+        });
+    }
+
+    private void downloadActiveTrips(final ITripsListener listener){
+        Call<TripsResponse> call = ecarriersAPI.getActiveTrips(Preferences.getSessionToken(context));
         call.enqueue(new Callback<TripsResponse>() {
             @Override
             public void onResponse(Call<TripsResponse> call, Response<TripsResponse> response) {
@@ -170,9 +205,9 @@ public class SyncUtils implements ISyncOperation {
         });
     }
 
-    private void markAsDriving(final ISyncOperation listener, final MarkAsDrivingOp op){
-        Call<OperationResponse> call = ecarriersAPI.markAsDriving(
-                Preferences.getSessionToken(context), op.getTripId());
+    private void markAsDriving(final IOperationListener listener, final MarkAsDrivingOp op){
+        MarkAsDrivingRequest request = new MarkAsDrivingRequest(Preferences.getSessionToken(context), op.getTripId());
+        Call<OperationResponse> call = ecarriersAPI.markAsDriving(request);
 
         call.enqueue(new Callback<OperationResponse>() {
             @Override
@@ -197,9 +232,9 @@ public class SyncUtils implements ISyncOperation {
         });
     }
 
-    private void markAsFinished(final ISyncOperation listener, final MarkAsFinishedOp op){
-        Call<OperationResponse> call = ecarriersAPI.markAsFinished(
-                Preferences.getSessionToken(context), op.getTripId());
+    private void markAsFinished(final IOperationListener listener, final MarkAsFinishedOp op){
+        MarkAsFinishedRequest request = new MarkAsFinishedRequest(Preferences.getSessionToken(context), op.getTripId());
+        Call<OperationResponse> call = ecarriersAPI.markAsFinished(request);
 
         call.enqueue(new Callback<OperationResponse>() {
             @Override
@@ -224,9 +259,10 @@ public class SyncUtils implements ISyncOperation {
         });
     }
 
-    private void markAsBeingShipped(final ISyncOperation listener, final MarkAsBeingShippedOp op){
-        Call<OperationResponse> call = ecarriersAPI.markAsBeingShipped(
-                Preferences.getSessionToken(context), op.getShipmentPublicationId());
+    private void markAsBeingShipped(final IOperationListener listener, final MarkAsBeingShippedOp op){
+        MarkAsBeingShippedRequest request = new MarkAsBeingShippedRequest(Preferences.getSessionToken(context),
+                op.getShipmentPublicationId());
+        Call<OperationResponse> call = ecarriersAPI.markAsBeingShipped(request);
 
         call.enqueue(new Callback<OperationResponse>() {
             @Override
@@ -251,9 +287,10 @@ public class SyncUtils implements ISyncOperation {
         });
     }
 
-    private void markAsDelivered(final ISyncOperation listener, final MarkAsDeliveredOp op){
-        Call<OperationResponse> call = ecarriersAPI.markAsDelivered(
-                Preferences.getSessionToken(context), op.getShipmentPublicationId());
+    private void markAsDelivered(final IOperationListener listener, final MarkAsDeliveredOp op){
+        MarkAsDeliveredRequest request = new MarkAsDeliveredRequest(Preferences.getSessionToken(context),
+                op.getShipmentPublicationId());
+        Call<OperationResponse> call = ecarriersAPI.markAsDelivered(request);
 
         call.enqueue(new Callback<OperationResponse>() {
             @Override
@@ -278,9 +315,10 @@ public class SyncUtils implements ISyncOperation {
         });
     }
 
-    private void reportLocation(final IAsyncResponse listener, final TripLocation loc){
-        Call<OperationResponse> call = ecarriersAPI.reportLocation(
-                Preferences.getSessionToken(context), loc.getTripId(), loc.getLat(), loc.getLng());
+    private void reportLocation(final IGenericListener listener, final TripLocation loc){
+        ReportLocationRequest request = new ReportLocationRequest(Preferences.getSessionToken(context),
+                loc.getTripId(), loc.getLat(), loc.getLng());
+        Call<OperationResponse> call = ecarriersAPI.reportLocation(request);
 
         call.enqueue(new Callback<OperationResponse>() {
             @Override

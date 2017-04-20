@@ -20,7 +20,7 @@ public class GeolocationUtils {
         boolean hasPermission = false;
         int hasLocationPermission = ContextCompat.checkSelfPermission(context,
                 Manifest.permission.ACCESS_FINE_LOCATION);
-        if (hasLocationPermission != PackageManager.PERMISSION_GRANTED) {
+        if (hasLocationPermission == PackageManager.PERMISSION_GRANTED) {
             hasPermission = true;
         }
         return hasPermission;

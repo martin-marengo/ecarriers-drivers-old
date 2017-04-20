@@ -19,8 +19,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
-import retrofit2.http.PUT;
 import retrofit2.http.Query;
 
 import static com.ecarriers.drivers.utils.Constants.ECARRIERS_BASE_URL;
@@ -33,16 +33,16 @@ public interface EcarriersAPI {
     @GET("trips/non_finished")
     Call<TripsResponse> getActiveTrips(@Query("api_token") String apiToken);
 
-    @PUT("trips/mark_as_driving")
+    @PATCH("trips/mark_as_driving")
     Call<OperationResponse> markAsDriving(@Body MarkAsDrivingRequest request);
 
-    @PUT("trips/mark_as_finished")
+    @PATCH("trips/mark_as_finished")
     Call<OperationResponse> markAsFinished(@Body MarkAsFinishedRequest request);
 
-    @PUT("shipment_publication/mark_as_being_shipped")
+    @PATCH("shipment_publication/mark_as_being_shipped")
     Call<OperationResponse> markAsBeingShipped(@Body MarkAsBeingShippedRequest request);
 
-    @PUT("shipment_publication/mark_as_delivered")
+    @PATCH("shipment_publication/mark_as_delivered")
     Call<OperationResponse> markAsDelivered(@Body MarkAsDeliveredRequest request);
 
     @POST("location_reports/report")

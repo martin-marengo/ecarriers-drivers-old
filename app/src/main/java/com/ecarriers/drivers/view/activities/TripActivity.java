@@ -22,7 +22,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ecarriers.drivers.R;
 import com.ecarriers.drivers.data.db.DbDataSource;
@@ -32,6 +31,9 @@ import com.ecarriers.drivers.data.db.operations.MarkAsDrivingOp;
 import com.ecarriers.drivers.data.db.operations.MarkAsFinishedOp;
 import com.ecarriers.drivers.data.remote.SyncUtils;
 import com.ecarriers.drivers.data.remote.listeners.IGenericListener;
+import com.ecarriers.drivers.geolocation.Geolocation;
+import com.ecarriers.drivers.geolocation.GeolocationUtils;
+import com.ecarriers.drivers.geolocation.ILocationListener;
 import com.ecarriers.drivers.models.Item;
 import com.ecarriers.drivers.models.ShipmentPublication;
 import com.ecarriers.drivers.models.Trip;
@@ -39,9 +41,6 @@ import com.ecarriers.drivers.models.TripLocation;
 import com.ecarriers.drivers.utils.Connectivity;
 import com.ecarriers.drivers.utils.Constants;
 import com.ecarriers.drivers.utils.DateUtils;
-import com.ecarriers.drivers.geolocation.Geolocation;
-import com.ecarriers.drivers.geolocation.GeolocationUtils;
-import com.ecarriers.drivers.geolocation.ILocationListener;
 import com.ecarriers.drivers.view.adapters.ShipmentPublicationAdapter;
 import com.ecarriers.drivers.view.adapters.listeners.IShipmentPublicationClick;
 
@@ -175,7 +174,7 @@ public class TripActivity extends AppCompatActivity implements
     }
 
     @OnClick(R.id.btn_start_trip)
-    private void onStartTripClick(View view){
+    void onStartTripClick(View view){
         trip.setState(Trip.TripStates.STATUS_DRIVING.toString());
         boolean success = dbDataSource.updateTrip(trip);
         if(success){
@@ -197,7 +196,7 @@ public class TripActivity extends AppCompatActivity implements
     }
 
     @OnClick(R.id.btn_finish_trip)
-    private void onFinishTripClick(View view){
+    void onFinishTripClick(View view){
         if(trip.canFinish()) {
             showConfirmFinishTripDialog();
         }else{
@@ -206,7 +205,7 @@ public class TripActivity extends AppCompatActivity implements
     }
 
     @OnClick(R.id.btn_report_location)
-    private void onReportLocationClick(View view){
+    void onReportLocationClick(View view){
         if(GeolocationUtils.locationPermissionGranted(getApplicationContext())) {
             if (Connectivity.isConnected(getApplicationContext())) {
                 if (geolocation == null) {
@@ -260,6 +259,7 @@ public class TripActivity extends AppCompatActivity implements
 
     private void setupRecyclerView(){
         rvShipmentPublications.setHasFixedSize(true);
+        rvShipmentPublications.setNestedScrollingEnabled(false);
 
         shipmentPublicationAdapter =
                 new ShipmentPublicationAdapter(getApplicationContext(), trip.getShipmentPublications(), this);
@@ -433,11 +433,11 @@ public class TripActivity extends AppCompatActivity implements
     }
 
     private void showNoConnectionMessageOnOperation(){
-        Snackbar.make(toolbar, R.string.msg_no_connection_operations, Toast.LENGTH_LONG).show();
+        Snackbar.make(toolbar, R.string.msg_no_connection_operations, Snackbar.LENGTH_LONG).show();
     }
 
     private void showNoConnectionMessage(){
-        Snackbar.make(toolbar, R.string.msg_no_connection, Toast.LENGTH_LONG).show();
+        Snackbar.make(toolbar, R.string.msg_no_connection, Snackbar.LENGTH_LONG).show();
     }
 
     @Override
@@ -499,18 +499,18 @@ public class TripActivity extends AppCompatActivity implements
     public void onResponse(boolean success, String key) {
         showProgressBar(false);
         if(success && key.equals(SyncUtils.TRIP_LOCATION)){
-            Snackbar.make(toolbar, R.string.msg_report_location_ok, Toast.LENGTH_LONG).show();
+            Snackbar.make(toolbar, R.string.msg_report_location_ok, Snackbar.LENGTH_LONG).show();
         }else{
-            Snackbar.make(toolbar, R.string.msg_report_location_error, Toast.LENGTH_LONG).show();
+            Snackbar.make(toolbar, R.string.msg_report_location_error, Snackbar.LENGTH_LONG).show();
         }
     }
 
     private void showNoLocationMessage(){
-        Snackbar.make(toolbar, R.string.msg_no_location_error, Toast.LENGTH_LONG).show();
+        Snackbar.make(toolbar, R.string.msg_no_location_error, Snackbar.LENGTH_LONG).show();
     }
 
     private void showNoLocationPermissionMessage(){
-        Snackbar.make(toolbar, R.string.msg_no_location_permission, Toast.LENGTH_LONG).show();
+        Snackbar.make(toolbar, R.string.msg_no_location_permission, Snackbar.LENGTH_LONG).show();
     }
 
     @Override

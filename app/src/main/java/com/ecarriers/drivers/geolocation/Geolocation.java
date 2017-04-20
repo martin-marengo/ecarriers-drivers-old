@@ -120,11 +120,11 @@ public class Geolocation implements LocationListener {
                     // Get the location manager
                     mLocationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
                 }
-                String provider = LocationManager.NETWORK_PROVIDER;
+                String provider = LocationManager.GPS_PROVIDER;
                 Location location = mLocationManager.getLastKnownLocation(provider);
 
                 if (location == null) {
-                    provider = LocationManager.GPS_PROVIDER;
+                    provider = LocationManager.NETWORK_PROVIDER;
                     location = mLocationManager.getLastKnownLocation(provider);
                 }
                 if (location != null) {

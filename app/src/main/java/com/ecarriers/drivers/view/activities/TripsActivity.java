@@ -18,7 +18,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ecarriers.drivers.R;
 import com.ecarriers.drivers.data.db.DbDataSource;
@@ -270,6 +269,6 @@ public class TripsActivity extends AppCompatActivity implements ITripsListener, 
     }
 
     private void showNoConnectionMessage(){
-        Snackbar.make(rvTrips, R.string.msg_no_connection_operations, Toast.LENGTH_LONG).show();
+        Snackbar.make(rvTrips, R.string.msg_no_connection_operations, Snackbar.LENGTH_LONG).show();
     }
 }

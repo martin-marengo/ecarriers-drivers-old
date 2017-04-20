@@ -32,7 +32,7 @@ public class ShipmentPublication {
     @Expose
     private String destinationAddress;
 
-    @SerializedName("state")
+    @SerializedName("status")
     @Expose
     private String state;
 

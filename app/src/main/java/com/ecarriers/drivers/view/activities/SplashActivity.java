@@ -29,8 +29,8 @@ public class SplashActivity extends AppCompatActivity implements IGenericListene
             getSupportActionBar().hide();
         }
 
-        Preferences.setSessionToken(getApplicationContext(), "dummy");
-        Preferences.setCurrentUserEmail(getApplicationContext(), "marengo.martin@gmail.com");
+        //Preferences.setSessionToken(getApplicationContext(), "dummy");
+        //Preferences.setCurrentUserEmail(getApplicationContext(), "marengo.martin@gmail.com");
 
         if(Connectivity.isConnected(getApplicationContext())) {
             SyncUtils syncUtils = new SyncUtils(getApplicationContext());
@@ -44,9 +44,9 @@ public class SplashActivity extends AppCompatActivity implements IGenericListene
     @Override
     public void onResponse(boolean success, String key) {
         syncEndTime = new Date().getTime();
-        long difference = syncEndTime - syncStartTime;
-        if(MINIMUM_DELAY < difference){
-            runDelay(difference);
+        long syncDelay = syncEndTime - syncStartTime;
+        if(syncDelay < MINIMUM_DELAY){
+            runDelay(MINIMUM_DELAY - syncDelay);
         }else{
             startApp();
         }

@@ -95,9 +95,9 @@ public class Trip {
                     if (!sp.getState().equals(ShipmentPublication.States.STATUS_DELIVERED.toString())){
                         allDelivered = false;
                     }
-                    if(allDelivered){
-                        canFinish = true;
-                    }
+                }
+                if(allDelivered){
+                    canFinish = true;
                 }
             }
         }

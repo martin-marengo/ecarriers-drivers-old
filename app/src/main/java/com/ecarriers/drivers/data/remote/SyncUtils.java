@@ -26,6 +26,7 @@ import com.ecarriers.drivers.data.remote.responses.OperationResponse;
 import com.ecarriers.drivers.data.remote.responses.TripsResponse;
 import com.ecarriers.drivers.models.TripLocation;
 import com.ecarriers.drivers.utils.Connectivity;
+import com.ecarriers.drivers.utils.Constants;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -212,15 +213,22 @@ public class SyncUtils implements IOperationListener {
         call.enqueue(new Callback<OperationResponse>() {
             @Override
             public void onResponse(Call<OperationResponse> call, Response<OperationResponse> response) {
+                OperationResponse resp = new OperationResponse();
+
                 if(response.isSuccessful()) {
-                    if (response.body() != null) {
-                        // TODO: ver si no viene algun error dentro de la respuesta exitosa.
-                        operationsDAO.completeOperation(MarkAsDrivingOp.OPERATION_TYPE, op.getTimestamp());
-                        listener.onResponse(SUCCESS, response.body());
+                    operationsDAO.completeOperation(MarkAsDrivingOp.OPERATION_TYPE, op.getTimestamp());
+
+                    resp.setCode(Constants.HTTP_OK);
+                    if(response.raw() != null && response.raw().message() != null) {
+                        resp.setSuccess(response.raw().message());
                     }
+
+                    listener.onResponse(SUCCESS, resp);
                 }else{
+                    resp.setCode(response.code());
+
                     logOnUnsuccesfulResponse(response, MarkAsDrivingOp.TAG);
-                    listener.onResponse(FAILURE, new OperationResponse());
+                    listener.onResponse(FAILURE, resp);
                 }
             }
 
@@ -239,15 +247,22 @@ public class SyncUtils implements IOperationListener {
         call.enqueue(new Callback<OperationResponse>() {
             @Override
             public void onResponse(Call<OperationResponse> call, Response<OperationResponse> response) {
+                OperationResponse resp = new OperationResponse();
+
                 if(response.isSuccessful()) {
-                    if (response.body() != null) {
-                        // TODO: ver si no viene algun error dentro de la respuesta exitosa.
-                        operationsDAO.completeOperation(MarkAsFinishedOp.OPERATION_TYPE, op.getTimestamp());
-                        listener.onResponse(SUCCESS, response.body());
+                    operationsDAO.completeOperation(MarkAsFinishedOp.OPERATION_TYPE, op.getTimestamp());
+
+                    resp.setCode(Constants.HTTP_OK);
+                    if(response.raw() != null && response.raw().message() != null) {
+                        resp.setSuccess(response.raw().message());
                     }
+
+                    listener.onResponse(SUCCESS, resp);
                 }else{
+                    resp.setCode(response.code());
+
                     logOnUnsuccesfulResponse(response, MarkAsFinishedOp.TAG);
-                    listener.onResponse(FAILURE, new OperationResponse());
+                    listener.onResponse(FAILURE, resp);
                 }
             }
 
@@ -267,15 +282,22 @@ public class SyncUtils implements IOperationListener {
         call.enqueue(new Callback<OperationResponse>() {
             @Override
             public void onResponse(Call<OperationResponse> call, Response<OperationResponse> response) {
+                OperationResponse resp = new OperationResponse();
+
                 if(response.isSuccessful()) {
-                    if (response.body() != null) {
-                        // TODO: ver si no viene algun error dentro de la respuesta exitosa.
-                        operationsDAO.completeOperation(MarkAsBeingShippedOp.OPERATION_TYPE, op.getTimestamp());
-                        listener.onResponse(SUCCESS, response.body());
+                    operationsDAO.completeOperation(MarkAsBeingShippedOp.OPERATION_TYPE, op.getTimestamp());
+
+                    resp.setCode(Constants.HTTP_OK);
+                    if(response.raw() != null && response.raw().message() != null) {
+                        resp.setSuccess(response.raw().message());
                     }
+
+                    listener.onResponse(SUCCESS, resp);
                 }else{
+                    resp.setCode(response.code());
+
                     logOnUnsuccesfulResponse(response, MarkAsBeingShippedOp.TAG);
-                    listener.onResponse(FAILURE, new OperationResponse());
+                    listener.onResponse(FAILURE, resp);
                 }
             }
 
@@ -295,15 +317,22 @@ public class SyncUtils implements IOperationListener {
         call.enqueue(new Callback<OperationResponse>() {
             @Override
             public void onResponse(Call<OperationResponse> call, Response<OperationResponse> response) {
+                OperationResponse resp = new OperationResponse();
+
                 if(response.isSuccessful()) {
-                    if (response.body() != null) {
-                        // TODO: ver si no viene algun error dentro de la respuesta exitosa.
-                        operationsDAO.completeOperation(MarkAsDeliveredOp.OPERATION_TYPE, op.getTimestamp());
-                        listener.onResponse(SUCCESS, response.body());
+                    operationsDAO.completeOperation(MarkAsDeliveredOp.OPERATION_TYPE, op.getTimestamp());
+
+                    resp.setCode(Constants.HTTP_OK);
+                    if(response.raw() != null && response.raw().message() != null) {
+                        resp.setSuccess(response.raw().message());
                     }
+
+                    listener.onResponse(SUCCESS, resp);
                 }else{
+                    resp.setCode(response.code());
+
                     logOnUnsuccesfulResponse(response, MarkAsDeliveredOp.TAG);
-                    listener.onResponse(FAILURE, new OperationResponse());
+                    listener.onResponse(FAILURE, resp);
                 }
             }
 
@@ -345,11 +374,16 @@ public class SyncUtils implements IOperationListener {
     public void onResponse(boolean success, OperationResponse response) {
         if(success){
             // In case of success, keep synchronizing ops until there is no more.
-            Log.d(OPERATIONS, response.getSuccess());
+
+            String resp = "";
+            if(response.getSuccess() != null){
+                resp = response.getSuccess();
+            }
+            Log.d(OPERATIONS, String.valueOf(response.getCode()) + ": " + resp);
+
             syncOperations();
         }else{
             // In case of failure, stop running operations and notify the listener if it's needed.
-            Log.d(OPERATIONS, response.getError());
             if(this.listener != null){
                 listener.onResponse(FAILURE, OPERATIONS);
             }

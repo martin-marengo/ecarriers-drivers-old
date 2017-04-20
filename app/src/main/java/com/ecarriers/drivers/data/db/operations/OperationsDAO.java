@@ -38,6 +38,7 @@ public class OperationsDAO {
     public void completeOperation(final int type, final long timestamp){
         OperationsQueue queue = getQueue();
         queue.removeOperation(timestamp);
+        saveOperationsQueue(queue);
 
         // Initialize Realm
         Realm.init(context);
@@ -100,8 +101,7 @@ public class OperationsDAO {
                     queue.getOperations().add(operation);
 
                     // Save queue back to preferences
-                    String newOperationsJson = OperationsQueue.serializeOperations(queue);
-                    Preferences.setOperationsQueue(context, newOperationsJson);
+                    saveOperationsQueue(queue);
 
                 } catch(Exception e) {
                     e.printStackTrace();
@@ -181,8 +181,7 @@ public class OperationsDAO {
                     queue.getOperations().add(operation);
 
                     // Save queue back to preferences
-                    String newOperationsJson = OperationsQueue.serializeOperations(queue);
-                    Preferences.setOperationsQueue(context, newOperationsJson);
+                    saveOperationsQueue(queue);
 
                 } catch(Exception e) {
                     e.printStackTrace();
@@ -262,8 +261,7 @@ public class OperationsDAO {
                     queue.getOperations().add(operation);
 
                     // Save queue back to preferences
-                    String newOperationsJson = OperationsQueue.serializeOperations(queue);
-                    Preferences.setOperationsQueue(context, newOperationsJson);
+                    saveOperationsQueue(queue);
 
                 } catch(Exception e) {
                     e.printStackTrace();
@@ -343,8 +341,7 @@ public class OperationsDAO {
                     queue.getOperations().add(operation);
 
                     // Save queue back to preferences
-                    String newOperationsJson = OperationsQueue.serializeOperations(queue);
-                    Preferences.setOperationsQueue(context, newOperationsJson);
+                    saveOperationsQueue(queue);
 
                 } catch(Exception e) {
                     e.printStackTrace();
@@ -411,5 +408,10 @@ public class OperationsDAO {
         }
         lastTimestamp = timestamp;
         return timestamp;
+    }
+
+    private void saveOperationsQueue(OperationsQueue queue){
+        String newOperationsJson = OperationsQueue.serializeOperations(queue);
+        Preferences.setOperationsQueue(context, newOperationsJson);
     }
 }

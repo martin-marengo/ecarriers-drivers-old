@@ -29,6 +29,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.ecarriers.drivers.R;
+import com.ecarriers.drivers.data.preferences.Preferences;
 import com.ecarriers.drivers.data.remote.SyncUtils;
 import com.ecarriers.drivers.data.remote.listeners.ILoginListener;
 import com.ecarriers.drivers.data.remote.responses.LoginResponse;
@@ -48,11 +49,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private static final int REQUEST_READ_CONTACTS = 0;
     private static final int MIN_PASSWORD_LENGHT = 8;
 
-    @BindView(R.id.actv_email) private AutoCompleteTextView etEmail;
-    @BindView(R.id.et_password) private EditText etPassword;
-    @BindView(R.id.progress_view) private View progressView;
-    @BindView(R.id.login_view) private View loginView;
-    @BindView(R.id.btn_sign_in) private Button btnSignIn;
+    @BindView(R.id.actv_email) AutoCompleteTextView etEmail;
+    @BindView(R.id.et_password) EditText etPassword;
+    @BindView(R.id.progress_view) View progressView;
+    @BindView(R.id.login_view) View loginView;
+    @BindView(R.id.btn_sign_in) Button btnSignIn;
+
+    private String mEmail = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,48 +81,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     @OnClick(R.id.btn_sign_in)
-    private void onBtnSignInClick(View view){
+    void onBtnSignInClick(View view){
         attemptLogin();
-    }
-
-    private void populateAutoComplete() {
-        if (!mayRequestContacts()) {
-            return;
-        }
-
-        getLoaderManager().initLoader(0, null, this);
-    }
-
-    private boolean mayRequestContacts() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
-        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(etEmail, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok, new View.OnClickListener() {
-                        @Override
-                        @TargetApi(Build.VERSION_CODES.M)
-                        public void onClick(View v) {
-                            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-                        }
-                    });
-        } else {
-            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-        }
-        return false;
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_READ_CONTACTS) {
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                populateAutoComplete();
-            }
-        }
     }
 
     private void attemptLogin() {
@@ -160,6 +123,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             closeKeyboard();
             if(Connectivity.isConnected(getApplicationContext())){
                 showProgress(true);
+                mEmail = email;
                 login(email, password);
             }else{
                 Snackbar.make(loginView, R.string.msg_no_connection, Snackbar.LENGTH_LONG).show();
@@ -176,11 +140,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     public void onResponse(boolean success, LoginResponse response) {
         showProgress(false);
 
-        // TODO: implement response according to api response. y GUARDAR TOKEN.
-        if (success) {
+        if (success && response != null && response.getToken() != null && !response.getToken().isEmpty()) {
+
+            Preferences.setSessionToken(getApplicationContext(), response.getToken());
+            if(mEmail != null && !mEmail.isEmpty()) {
+                Preferences.setCurrentUserEmail(getApplicationContext(), mEmail);
+            }
+
             Intent i = new Intent(getApplicationContext(), TripsActivity.class);
             startActivity(i);
         } else {
+            mEmail = "";
             etPassword.setError(getString(R.string.error_incorrect_password));
             etPassword.requestFocus();
         }
@@ -192,6 +162,78 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private boolean isPasswordValid(String password) {
         return password.length() >= MIN_PASSWORD_LENGHT;
+    }
+
+    private void closeKeyboard(){
+        InputMethodManager imm = (InputMethodManager) getSystemService(
+                Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(etEmail.getWindowToken(), 0);
+    }
+
+    private void showProgress(final boolean show) {
+        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+        loginView.setVisibility(show ? View.GONE : View.VISIBLE);
+        loginView.animate().setDuration(shortAnimTime).alpha(
+                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                loginView.setVisibility(show ? View.GONE : View.VISIBLE);
+            }
+        });
+
+        progressView.setVisibility(show ? View.VISIBLE : View.GONE);
+        progressView.animate().setDuration(shortAnimTime).alpha(
+                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                progressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            }
+        });
+    }
+
+    /**
+     * AUTOCOMPLETE EMAIL
+     * */
+
+    private void populateAutoComplete() {
+        if (!mayRequestContacts()) {
+            return;
+        }
+
+        getLoaderManager().initLoader(0, null, this);
+    }
+
+    private boolean mayRequestContacts() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return true;
+        }
+        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        }
+        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
+            Snackbar.make(etEmail, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(android.R.string.ok, new View.OnClickListener() {
+                        @Override
+                        @TargetApi(Build.VERSION_CODES.M)
+                        public void onClick(View v) {
+                            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
+                        }
+                    });
+        } else {
+            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
+        }
+        return false;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_READ_CONTACTS) {
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                populateAutoComplete();
+            }
+        }
     }
 
     @Override
@@ -247,32 +289,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         int IS_PRIMARY = 1;
     }
 
-    private void closeKeyboard(){
-        InputMethodManager imm = (InputMethodManager) getSystemService(
-                Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(etEmail.getWindowToken(), 0);
-    }
-
-    private void showProgress(final boolean show) {
-        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
-        loginView.setVisibility(show ? View.GONE : View.VISIBLE);
-        loginView.animate().setDuration(shortAnimTime).alpha(
-                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                loginView.setVisibility(show ? View.GONE : View.VISIBLE);
-            }
-        });
-
-        progressView.setVisibility(show ? View.VISIBLE : View.GONE);
-        progressView.animate().setDuration(shortAnimTime).alpha(
-                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                progressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            }
-        });
-    }
+    /**
+     * FIN AUTOCOMPLETE EMAIL
+     * */
 }
 

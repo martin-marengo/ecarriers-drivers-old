@@ -2,6 +2,9 @@ package com.ecarriers.drivers.data.preferences;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
+import com.ecarriers.drivers.R;
 
 public class Preferences {
 
@@ -9,12 +12,18 @@ public class Preferences {
 
     private static final String COMMON_PREF = "APPDATA";
 
-    private static final String CURRENT_TRIP_ID = "current_trip_id";
     private static final String SESSION_TOKEN = "session_token";
     private static final String CURRENT_USER_EMAIL = "current_user_email";
     private static final String OPERATIONS_QUEUE = "operations_queue";
 
     // Data getters and setters
+
+    // It is only IP:port (port if needed)
+    // It is saved on preferences screen automatically
+    public static String getServerAddress(Context context){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        return sp.getString(context.getResources().getString(R.string.key_server_address_preference), "");
+    }
 
     public static void setSessionToken(Context context, String token){
         SharedPreferences.Editor editor = getEditor(context).putString(SESSION_TOKEN, token);
@@ -22,14 +31,6 @@ public class Preferences {
     }
     public static String getSessionToken(Context context){
         return getSharedPreferences(context).getString(SESSION_TOKEN, "");
-    }
-
-    public static void setCurrentTripId(Context context, long id){
-        SharedPreferences.Editor editor = getEditor(context).putLong(CURRENT_TRIP_ID, id);
-        editor.apply();
-    }
-    public static long getCurrentTripId(Context context){
-        return getSharedPreferences(context).getLong(CURRENT_TRIP_ID, -1);
     }
 
     public static void setCurrentUserEmail(Context context, String email){

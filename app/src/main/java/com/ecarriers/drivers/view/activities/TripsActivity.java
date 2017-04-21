@@ -1,6 +1,7 @@
 package com.ecarriers.drivers.view.activities;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -11,17 +12,21 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 import com.ecarriers.drivers.R;
 import com.ecarriers.drivers.data.db.DbDataSource;
 import com.ecarriers.drivers.data.db.operations.MarkAsDrivingOp;
+import com.ecarriers.drivers.data.preferences.Preferences;
 import com.ecarriers.drivers.data.remote.SyncUtils;
 import com.ecarriers.drivers.data.remote.listeners.ITripsListener;
 import com.ecarriers.drivers.data.remote.responses.TripsResponse;
@@ -130,12 +135,33 @@ public class TripsActivity extends AppCompatActivity implements ITripsListener, 
     private void setupToolbar(){
         if(toolbar != null) {
             toolbar.setTitle(getResources().getString(R.string.app_name));
+            toolbar.setSubtitle(Preferences.getCurrentUserEmail(getApplicationContext()));
             setSupportActionBar(toolbar);
         }
         ActionBar tb = getSupportActionBar();
         if(tb != null) {
             tb.setDisplayShowTitleEnabled(true);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.trips_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_settings) {
+            Intent i = new Intent(TripsActivity.this, PreferenceActivity.class);
+            startActivity(i);
+        }
+        if (id == R.id.action_sign_out) {
+            signOut();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void syncTrips(){
@@ -237,12 +263,33 @@ public class TripsActivity extends AppCompatActivity implements ITripsListener, 
 
     @Override
     public void onStartTripClick(int position, Trip trip) {
+        showConfirmStartTripDialog(trip);
+    }
+
+    private void startTrip(Trip trip){
         trip.setState(Trip.TripStates.STATUS_DRIVING.toString());
         boolean success = dbDataSource.updateTrip(trip);
         if(success){
-            adapter.notifyItemChanged(position);
+            adapter.notifyDataSetChanged();
             startTripSync(trip);
         }
+    }
+
+    private void showConfirmStartTripDialog(final Trip trip){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getResources().getString(R.string.title_confirm_start_trip));
+        builder.setMessage(getResources().getString(R.string.msg_confirm_start_trip));
+        builder.setPositiveButton(getResources().getString(R.string.action_start_trip), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                startTrip(trip);
+            }
+        });
+        builder.setNegativeButton(getResources().getString(R.string.action_cancel), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+            }
+        });
+        builder.show();
     }
 
     private void startTripSync(Trip trip){
@@ -270,5 +317,14 @@ public class TripsActivity extends AppCompatActivity implements ITripsListener, 
 
     private void showNoConnectionMessage(){
         Snackbar.make(rvTrips, R.string.msg_no_connection_operations, Snackbar.LENGTH_LONG).show();
+    }
+
+    private void signOut(){
+        Preferences.setCurrentUserEmail(getApplicationContext(), "");
+        Preferences.setSessionToken(getApplicationContext(), "");
+
+        Intent i = new Intent(TripsActivity.this, LoginActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(i);
     }
 }

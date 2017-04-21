@@ -2,6 +2,7 @@ package com.ecarriers.drivers.data.remote;
 
 import android.content.Context;
 
+import com.ecarriers.drivers.data.preferences.Preferences;
 import com.ecarriers.drivers.data.remote.requests.LoginRequest;
 import com.ecarriers.drivers.data.remote.requests.MarkAsBeingShippedRequest;
 import com.ecarriers.drivers.data.remote.requests.MarkAsDeliveredRequest;
@@ -11,6 +12,7 @@ import com.ecarriers.drivers.data.remote.requests.ReportLocationRequest;
 import com.ecarriers.drivers.data.remote.responses.LoginResponse;
 import com.ecarriers.drivers.data.remote.responses.OperationResponse;
 import com.ecarriers.drivers.data.remote.responses.TripsResponse;
+import com.ecarriers.drivers.utils.Constants;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -22,8 +24,6 @@ import retrofit2.http.GET;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
-
-import static com.ecarriers.drivers.utils.Constants.ECARRIERS_BASE_URL;
 
 public interface EcarriersAPI {
 
@@ -62,8 +62,10 @@ public interface EcarriersAPI {
                 interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
                 OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
 
+                String baseUrl = Constants.URL_1 + Preferences.getServerAddress(context) + Constants.URL_2;
+
                 Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl(ECARRIERS_BASE_URL)
+                        .baseUrl(baseUrl)
                         .client(client)
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();

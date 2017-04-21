@@ -175,6 +175,10 @@ public class TripActivity extends AppCompatActivity implements
 
     @OnClick(R.id.btn_start_trip)
     void onStartTripClick(View view){
+        showConfirmStartTripDialog();
+    }
+
+    private void startTrip(){
         trip.setState(Trip.TripStates.STATUS_DRIVING.toString());
         boolean success = dbDataSource.updateTrip(trip);
         if(success){
@@ -282,6 +286,23 @@ public class TripActivity extends AppCompatActivity implements
         if(!trip.getState().equals(Trip.TripStates.STATUS_FINISHED.toString())) {
             showChangeStateDialog(position, sp);
         }
+    }
+
+    private void showConfirmStartTripDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getResources().getString(R.string.title_confirm_start_trip));
+        builder.setMessage(getResources().getString(R.string.msg_confirm_start_trip));
+        builder.setPositiveButton(getResources().getString(R.string.action_start_trip), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                startTrip();
+            }
+        });
+        builder.setNegativeButton(getResources().getString(R.string.action_cancel), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+            }
+        });
+        builder.show();
     }
 
     private void showConfirmFinishTripDialog(){

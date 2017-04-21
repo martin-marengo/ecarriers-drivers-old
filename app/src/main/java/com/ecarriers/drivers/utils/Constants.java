@@ -6,11 +6,8 @@ public class Constants {
      * Network
      */
 
-    // Production
-    //public static final String ECARRIERS_BASE_URL = "http://ecarriers.herokuapp/apipie/";
-
-    // Testing
-    public static final String ECARRIERS_BASE_URL = "http://192.168.1.119:3000/api/v1/";
+    public static final String URL_1 = "http://";
+    public static final String URL_2 = "/api/v1/";
 
     public static final int HTTP_OK = 200;
     public static final int HTTP_UNAUTHORIZED = 401;

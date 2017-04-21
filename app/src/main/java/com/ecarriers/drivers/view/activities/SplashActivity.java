@@ -29,9 +29,6 @@ public class SplashActivity extends AppCompatActivity implements IGenericListene
             getSupportActionBar().hide();
         }
 
-        //Preferences.setSessionToken(getApplicationContext(), "dummy");
-        //Preferences.setCurrentUserEmail(getApplicationContext(), "marengo.martin@gmail.com");
-
         if(Connectivity.isConnected(getApplicationContext())) {
             SyncUtils syncUtils = new SyncUtils(getApplicationContext());
             syncStartTime = new Date().getTime();
@@ -61,13 +58,20 @@ public class SplashActivity extends AppCompatActivity implements IGenericListene
     }
 
     private void startApp(){
-        if(Preferences.getSessionToken(getApplicationContext()).isEmpty()){
-            Intent i = new Intent(SplashActivity.this, LoginActivity.class);
+        String ad = Preferences.getServerAddress(getApplicationContext());
+        if(ad.isEmpty()){
+            Intent i = new Intent(SplashActivity.this, PreferenceActivity.class);
             startActivity(i);
-
         }else{
-            Intent i = new Intent(SplashActivity.this, TripsActivity.class);
-            startActivity(i);
+            if(Preferences.getSessionToken(getApplicationContext()).isEmpty()){
+                Intent i = new Intent(SplashActivity.this, LoginActivity.class);
+                startActivity(i);
+
+            }else{
+                Intent i = new Intent(SplashActivity.this, TripsActivity.class);
+                startActivity(i);
+            }
         }
+
     }
 }

@@ -16,6 +16,8 @@
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Contraseña</string>
     <string name="action_sign_in">Inicia sesión</string>
+    <string name="action_sign_out">Cerrar sesión</string>
+    <string name="action_settings">Configuración</string>
     <string name="action_sign_in_short">Inicia sesión</string>
     <string name="error_invalid_email">El email es inválido</string>
     <string name="error_invalid_password">La contraseña es muy corta</string>
@@ -51,9 +53,13 @@
     <string name="title_cant_finish_trip">No se puede finalizar viaje</string>
     <string name="msg_cant_finish_trip">Para finalizar un viaje, el mismo debe estar en estado VIAJANDO y todos los envíos deben estar entregados.</string>
 
-    <string name="title_confirm_finish_trip">Finalizar viaje</string>
-    <string name="msg_confirm_finish_trip">¿Estás seguro de finalizar este viaje? No podrás volver a editarlo o verlo.</string>
+    <string name="title_confirm_finish_trip">¿Finalizar viaje?</string>
+    <string name="msg_confirm_finish_trip">Una vez finalizado no podrás volver a editarlo o verlo.</string>
     <string name="action_finish_trip">FINALIZAR</string>
+
+    <string name="title_confirm_start_trip">¿Comenzar viaje?</string>
+    <string name="msg_confirm_start_trip">Una vez comenzado, no podrás volver a marcarlo como pendiente.</string>
+    <string name="action_start_trip">COMENZAR</string>
 
     <string name="title_send_location">Enviar ubicación</string>
     <string name="msg_send_location">¿Deseas enviar tu ubicación actual a los clientes de este viaje?</string>
@@ -63,4 +69,8 @@
 
     <string name="msg_no_location_error">No se ha podido obtener tu ubicación actual. Asegúrate de tener la ubicación de tu dispositivo habilitada.</string>
     <string name="msg_no_location_permission">No tenemos permiso para obtener tu ubicación. Ve a la configuración de la aplicación para otorgar el permiso.</string>
+
+    <string name="title_server_address_preference">Dirección de la API</string>
+    <string name="key_server_address_preference">server_address_preference</string>
+    <string name="text_server_address_preference">Formato ip:puerto (si el puerto es necesario)</string>
 </resources>

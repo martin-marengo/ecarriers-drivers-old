@@ -25,6 +25,6 @@ public class Constants {
      * View
      * */
 
-    public static final int DISTANCE_TO_TRIGGER_SYNC = 300; //in dpi
+    public static final int DISTANCE_TO_TRIGGER_SYNC = 250; //in dpi
 
 }

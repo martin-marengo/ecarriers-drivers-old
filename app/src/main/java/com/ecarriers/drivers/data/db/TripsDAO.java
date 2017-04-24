@@ -50,6 +50,30 @@ class TripsDAO extends RealmDAO {
         return success;
     }
 
+    boolean deleteTrips(){
+        boolean success = true;
+
+        // Initialize Realm
+        Realm.init(context);
+        // Get a Realm instance for this thread
+        Realm realm = Realm.getDefaultInstance();
+
+        try {
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    final RealmResults<TripDB> trips = realm.where(TripDB.class).findAll();
+                    trips.deleteAllFromRealm();
+                }
+            });
+        } catch(Exception e){
+            e.printStackTrace();
+            success = false;
+        }
+
+        return success;
+    }
+
     ArrayList<Trip> getActiveTrips(){
         ArrayList<Trip> tripList = new ArrayList<>();
 

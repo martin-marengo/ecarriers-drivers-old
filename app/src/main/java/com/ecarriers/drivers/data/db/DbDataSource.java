@@ -21,6 +21,12 @@ public class DbDataSource {
         return tripsDAO.insertOrUpdateTrips(trips);
     }
 
+    public boolean deleteTrips(){
+        TripsDAO tripsDAO = new TripsDAO(context);
+
+        return tripsDAO.deleteTrips();
+    }
+
     public ArrayList<Trip> getActiveTrips(){
         TripsDAO tripsDAO = new TripsDAO(context);
 

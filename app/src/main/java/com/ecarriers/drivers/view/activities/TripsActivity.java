@@ -182,10 +182,16 @@ public class TripsActivity extends AppCompatActivity implements ITripsListener, 
     @Override
     public void onResponse(boolean success, TripsResponse response) {
         if (success && response != null && response.getTrips() != null){
-            if (dbDataSource.saveActiveTrips(response.getTrips())){
-                trips = dbDataSource.getActiveTrips();
+            if(!response.getTrips().isEmpty()) {
+                if (dbDataSource.saveActiveTrips(response.getTrips())) {
+                    trips = dbDataSource.getActiveTrips();
+                } else {
+                    trips = response.getTrips();
+                }
             }else{
-                trips = response.getTrips();
+                // Delete all in DB if no trips come
+                dbDataSource.deleteTrips();
+                trips = new ArrayList<>();
             }
         }else{
             showMessage = true;
@@ -230,6 +236,8 @@ public class TripsActivity extends AppCompatActivity implements ITripsListener, 
 
         if(trips.isEmpty()){
             showEmptyTrips(true);
+        }else{
+            showEmptyTrips(false);
         }
 
         swipeRefreshLayout.setRefreshing(false);

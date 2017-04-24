@@ -28,6 +28,7 @@ import com.ecarriers.drivers.data.db.DbDataSource;
 import com.ecarriers.drivers.data.db.operations.MarkAsDrivingOp;
 import com.ecarriers.drivers.data.preferences.Preferences;
 import com.ecarriers.drivers.data.remote.SyncUtils;
+import com.ecarriers.drivers.data.remote.listeners.IGenericListener;
 import com.ecarriers.drivers.data.remote.listeners.ITripsListener;
 import com.ecarriers.drivers.data.remote.responses.TripsResponse;
 import com.ecarriers.drivers.models.Trip;
@@ -41,7 +42,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class TripsActivity extends AppCompatActivity implements ITripsListener, ITripClick {
+public class TripsActivity extends AppCompatActivity implements ITripsListener, ITripClick, IGenericListener {
 
     @BindView(R.id.swipe_layout) SwipeRefreshLayout swipeRefreshLayout = null;
     @BindView(R.id.rv_trips) RecyclerView rvTrips = null;
@@ -167,7 +168,8 @@ public class TripsActivity extends AppCompatActivity implements ITripsListener, 
     private void syncTrips(){
         if(Connectivity.isConnected(getApplicationContext())){
             SyncUtils syncUtils = new SyncUtils(getApplicationContext());
-            syncUtils.getActiveTrips(this);
+            syncUtils.syncAllOperations(this);
+            //syncUtils.getActiveTrips(this);
         }else{
             trips = dbDataSource.getActiveTrips();
             if (trips == null){
@@ -179,6 +181,19 @@ public class TripsActivity extends AppCompatActivity implements ITripsListener, 
         }
     }
 
+    // onResponse operations
+    @Override
+    public void onResponse(boolean success, String key) {
+        if (success && Connectivity.isConnected(getApplicationContext())){
+            SyncUtils syncUtils = new SyncUtils(getApplicationContext());
+            syncUtils.getActiveTrips(this);
+        } else {
+            onSyncTripsFail();
+            currentTask = new SortTripsAT(trips).execute();
+        }
+    }
+
+    // onResponse trips
     @Override
     public void onResponse(boolean success, TripsResponse response) {
         if (success && response != null && response.getTrips() != null){
@@ -194,12 +209,16 @@ public class TripsActivity extends AppCompatActivity implements ITripsListener, 
                 trips = new ArrayList<>();
             }
         }else{
-            showMessage = true;
-            message = getResources().getString(R.string.msg_get_trips_error);
-            trips = new ArrayList<>();
+           onSyncTripsFail();
         }
 
         currentTask = new SortTripsAT(trips).execute();
+    }
+
+    private void onSyncTripsFail(){
+        showMessage = true;
+        message = getResources().getString(R.string.msg_get_trips_error);
+        trips = new ArrayList<>();
     }
 
     private class SortTripsAT extends AsyncTask<Void, Void, Void> {

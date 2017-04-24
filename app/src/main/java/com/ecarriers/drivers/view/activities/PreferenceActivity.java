@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.ecarriers.drivers.R;
+import com.ecarriers.drivers.data.preferences.Preferences;
 import com.ecarriers.drivers.data.remote.EcarriersAPI;
 import com.ecarriers.drivers.view.fragments.AppPreferencesFragment;
 
@@ -60,8 +61,12 @@ public class PreferenceActivity extends AppCompatActivity {
         // Reset API instance cos the server IP could been changed.
         EcarriersAPI.Factory.resetInstance(getApplicationContext());
 
-        Intent i = new Intent(PreferenceActivity.this, SplashActivity.class);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(i);
+        if(Preferences.getServerAddress(getApplicationContext()).isEmpty()){
+            finish();
+        } else {
+            Intent i = new Intent(PreferenceActivity.this, SplashActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(i);
+        }
     }
 }

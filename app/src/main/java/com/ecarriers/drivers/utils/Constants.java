@@ -6,8 +6,8 @@ public class Constants {
      * Network
      */
 
-    public static final String URL_1 = "http://";
-    public static final String URL_2 = "/api/v1/";
+    public static final String MIDDLE_API_URL = "/api/v1/";
+    public static final String DEFAULT_START_API_URL = "http://";
 
     public static final int HTTP_OK = 200;
     public static final int HTTP_UNAUTHORIZED = 401;

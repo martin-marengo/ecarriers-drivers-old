@@ -62,7 +62,13 @@ public interface EcarriersAPI {
                 interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
                 OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
 
-                String baseUrl = Constants.URL_1 + Preferences.getServerAddress(context) + Constants.URL_2;
+                String startUrl;
+                if(Preferences.getServerAddress(context).isEmpty()){
+                    startUrl = Constants.DEFAULT_START_API_URL;
+                }else{
+                    startUrl = Preferences.getServerAddress(context);
+                }
+                String baseUrl = startUrl + Constants.MIDDLE_API_URL;
 
                 Retrofit retrofit = new Retrofit.Builder()
                         .baseUrl(baseUrl)

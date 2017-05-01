@@ -29,6 +29,11 @@ public class SplashActivity extends AppCompatActivity implements IGenericListene
             getSupportActionBar().hide();
         }
 
+        String ad = Preferences.getServerAddress(getApplicationContext());
+        if(ad.isEmpty()){
+            Preferences.setServerAddress(getApplicationContext(), getResources().getString(R.string.production_url));
+        }
+
         if(Connectivity.isConnected(getApplicationContext())) {
             SyncUtils syncUtils = new SyncUtils(getApplicationContext());
             syncStartTime = new Date().getTime();

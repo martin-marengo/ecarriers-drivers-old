@@ -24,6 +24,11 @@ public class Preferences {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         return sp.getString(context.getResources().getString(R.string.key_server_address_preference), "");
     }
+    public static void setServerAddress(Context context, String address){
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        editor.putString(context.getResources().getString(R.string.key_server_address_preference), address);
+        editor.apply();
+    }
 
     public static void setSessionToken(Context context, String token){
         SharedPreferences.Editor editor = getEditor(context).putString(SESSION_TOKEN, token);

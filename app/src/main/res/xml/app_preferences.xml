@@ -8,7 +8,8 @@
         <EditTextPreference
             android:title="@string/title_server_address_preference"
             android:key="@string/key_server_address_preference"
-            android:summary="@string/text_server_address_preference"/>
+            android:summary="@string/text_server_address_preference"
+            android:defaultValue="@string/production_url"/>
 
     </PreferenceCategory>
 </PreferenceScreen>

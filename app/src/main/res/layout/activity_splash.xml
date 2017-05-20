@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary">
+    android:background="@color/colorAccent">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -19,15 +19,25 @@
             android:layout_centerHorizontal="true"
             android:src="@drawable/logo" />
 
-        <TextView
-            android:textColor="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/ic_logo"
+        <!-- El alto tiene que ser el 37 o 38 % del ancho -->
+        <ImageView
+            android:id="@+id/ic_isologo"
+            android:layout_width="180dp"
+            android:layout_height="67dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="40dp"
-            android:textSize="35sp"
-            android:text="@string/app_name" />
+            android:layout_below="@id/ic_logo"
+            android:src="@drawable/isologo_mobile"
+            android:layout_marginTop="40dp"/>
+
+        <!--<TextView-->
+            <!--android:textColor="@color/white"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@id/ic_logo"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:layout_marginTop="40dp"-->
+            <!--android:textSize="35sp"-->
+            <!--android:text="@string/app_name" />-->
 
     </RelativeLayout>
 

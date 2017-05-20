@@ -8,7 +8,7 @@
     <dimen name="tv_body">14sp</dimen>
     <dimen name="tv_body_small">12sp</dimen>
 
-    <dimen name="splash_logo_img">144dp</dimen>
+    <dimen name="splash_logo_img">170dp</dimen>
 
     <dimen name="app_icon_size">52dp</dimen>
 
